@@ -1,0 +1,74 @@
+{
+  "templates": {
+    "base": "base.html",
+    "cover": "cover_page.html",
+    "content": "content_page.html",
+    "footer": "footer.html",
+    "promotion": "promotion.html"
+  },
+  "branding": {
+    "title": "Current Affairs Quiz",
+    "logo": "logo.png",
+    "channels": {
+      "english": "@daily_current_all_source",
+      "gujarati": "@currentadda"
+    },
+    "join_link": "https://t.me/+UkTcRyx3rhERLwQR",
+    "copyright": "© 2023 CurrentAdda. All rights reserved."
+  },
+  "styling": {
+    "colors": {
+      "primary-blue": "#2563eb",
+      "primary-blue-dark": "#1d4ed8",
+      "primary-blue-light": "#60a5fa",
+      "secondary-purple": "#7c3aed",
+      "secondary-green": "#059669",
+      "secondary-orange": "#ea580c",
+      "gray-50": "#f9fafb",
+      "gray-100": "#f3f4f6",
+      "gray-200": "#e5e7eb",
+      "gray-300": "#d1d5db",
+      "gray-600": "#4b5563",
+      "gray-800": "#1f2937",
+      "gray-900": "#111827"
+    },
+    "fonts": {
+      "primary": "Inter, -apple-system, BlinkMacSystemFont, sans-serif",
+      "secondary": "Playfair Display, Georgia, serif",
+      "mono": "JetBrains Mono, Fira Code, monospace"
+    },
+    "sizes": {
+      "text-xs": "0.75rem",
+      "text-sm": "0.875rem",
+      "text-base": "1rem",
+      "text-lg": "1.125rem",
+      "text-xl": "1.25rem",
+      "text-2xl": "1.5rem",
+      "text-3xl": "1.875rem",
+      "text-4xl": "2.25rem",
+      "text-5xl": "3rem"
+    },
+    "spacing": {
+      "space-1": "0.25rem",
+      "space-2": "0.5rem",
+      "space-3": "0.75rem",
+      "space-4": "1rem",
+      "space-6": "1.5rem",
+      "space-8": "2rem",
+      "space-12": "3rem",
+      "space-16": "4rem",
+      "space-24": "6rem"
+    }
+  },
+  "pdf": {
+    "format": "A4",
+    "margin": {
+      "top": "0.5in",
+      "right": "0.5in",
+      "bottom": "0.5in",
+      "left": "0.5in"
+    },
+    "printBackground": true,
+    "preferCSSPageSize": true
+  }
+} 

@@ -1,0 +1,11 @@
+{% if language == 'en' %}
+<div style="text-align: center; width: 100%; font-size: 10px; color: #6b7280;">
+    <div>Page <span class="pageNumber"></span> of <span class="totalPages"></span></div>
+    <div>Generated on {{ generation_date }} | Source: IndiaBix | Current Adda by Ajay Ambaliya</div>
+</div>
+{% else %}
+<div style="text-align: center; width: 100%; font-size: 10px; color: #6b7280;">
+    <div>પૃષ્ઠ <span class="pageNumber"></span> / <span class="totalPages"></span></div>
+    <div>{{ generation_date }} પર જનરેટ કરેલ | સ્ત્રોત: IndiaBix | અજય અંબાલિયા દ્વારા કરંટ અડ્ડા</div>
+</div>
+{% endif %} 

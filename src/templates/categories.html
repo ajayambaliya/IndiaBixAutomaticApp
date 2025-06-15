@@ -1,0 +1,196 @@
+{% if language == 'en' %}
+<h2 class="section-title">Current Affairs by Category</h2>
+{% else %}
+<h2 class="section-title">શ્રેણી દ્વારા કરંટ અફેર્સ</h2>
+{% endif %}
+
+<div class="categories-container">
+    {% for category, questions in categorized_questions.items() %}
+    <div class="category-section">
+        <h3 class="category-title">
+            {% if language == 'en' %}
+                {{ category|title }}
+            {% else %}
+                {% set cat = category|lower %}
+                {% if cat == 'agriculture' %}કૃષિ
+                {% elif cat == 'art and culture' %}કલા અને સંસ્કૃતિ
+                {% elif cat == 'awards and honours' %}પુરસ્કાર અને સન્માન
+                {% elif cat == 'banking' %}બેંકિંગ
+                {% elif cat == 'bills and acts' %}બિલ અને કાયદા
+                {% elif cat == 'business' %}વ્યાપાર
+                {% elif cat == 'defence' %}સંરક્ષણ
+                {% elif cat == 'economy' %}અર્થવ્યવસ્થા
+                {% elif cat == 'education' %}શિક્ષણ
+                {% elif cat == 'environment' %}પર્યાવરણ
+                {% elif cat == 'festivity' %}ઉત્સવ
+                {% elif cat == 'finance' %}નાણાં
+                {% elif cat == 'important days' %}મહત્વપૂર્ણ દિવસો
+                {% elif cat == 'international' %}આંતરરાષ્ટ્રીય
+                {% elif cat == 'national' %}રાષ્ટ્રીય
+                {% elif cat == 'obituary' %}શ્રદ્ધાંજલિ
+                {% elif cat == 'persons' %}વ્યક્તિઓ
+                {% elif cat == 'places' %}સ્થળો
+                {% elif cat == 'politics' %}રાજકારણ
+                {% elif cat == 'science' %}વિજ્ઞાન
+                {% elif cat == 'sports' %}રમતગમત
+                {% elif cat == 'state' %}રાજ્ય
+                {% elif cat == 'talkies' %}ચલચિત્ર
+                {% elif cat == 'technology' %}ટેકનોલોજી
+                {% elif cat == 'miscellaneous' %}વિવિધ
+                {% elif cat == 'general' %}સામાન્ય
+                {% elif cat == 'geography' %}ભૂગોળ
+                {% elif cat == 'history' %}ઇતિહાસ
+                {% elif cat == 'awards' %}પુરસ્કાર
+                {% else %}{{ category|title }}
+                {% endif %}
+            {% endif %}
+            <span class="category-count">{{ questions|length }}</span>
+        </h3>
+        
+        <div class="questions-list">
+            {% for question in questions %}
+            <div class="question-item">
+                <a href="#question-{{ question.index }}">{{ question.index }}. {{ question.question_text|truncate(80, true, '...') }}</a>
+            </div>
+            {% endfor %}
+        </div>
+    </div>
+    {% endfor %}
+</div>
+
+<style>
+    .section-title {
+        font-size: 1.75rem;
+        color: var(--gray-900);
+        margin-bottom: 1.25rem;
+        text-align: center;
+        position: relative;
+        padding-bottom: 0.75rem;
+    }
+    
+    .section-title::after {
+        content: '';
+        position: absolute;
+        bottom: 0;
+        left: 50%;
+        transform: translateX(-50%);
+        width: 80px;
+        height: 4px;
+        background: var(--gradient-primary);
+        border-radius: 2px;
+    }
+    
+    .categories-container {
+        display: grid;
+        grid-template-columns: repeat(2, 1fr);
+        gap: 1rem;
+        margin-top: 1.5rem;
+        padding-bottom: 2rem; /* Add space for footer */
+        overflow-y: auto;
+        max-height: 85vh;
+    }
+    
+    .category-section {
+        background: linear-gradient(145deg, #ffffff 0%, #f8fafc 100%);
+        border-radius: 0.75rem;
+        padding: 1rem;
+        box-shadow: 0 4px 6px rgba(0, 0, 0, 0.05), 0 10px 15px rgba(0, 0, 0, 0.03);
+        border: 1px solid rgba(255, 255, 255, 0.8);
+        transition: transform 0.2s ease;
+        position: relative;
+        overflow: hidden;
+        height: 100%;
+        display: flex;
+        flex-direction: column;
+        page-break-inside: avoid;
+    }
+    
+    .category-section::before {
+        content: '';
+        position: absolute;
+        top: 0;
+        left: 0;
+        right: 0;
+        height: 4px;
+        background: var(--gradient-primary);
+    }
+    
+    .category-title {
+        font-size: 1.1rem;
+        color: var(--gray-800);
+        margin-bottom: 0.75rem;
+        border-bottom: 1px solid var(--gray-200);
+        padding-bottom: 0.5rem;
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+    }
+    
+    .category-count {
+        font-size: 0.75rem;
+        font-weight: 600;
+        color: var(--primary-blue);
+        background-color: rgba(59, 130, 246, 0.1);
+        padding: 0.25rem 0.5rem;
+        border-radius: 9999px;
+    }
+    
+    .questions-list {
+        max-height: 150px;
+        overflow-y: auto;
+        padding-right: 0.5rem;
+        flex-grow: 1;
+    }
+    
+    .questions-list::-webkit-scrollbar {
+        width: 4px;
+    }
+    
+    .questions-list::-webkit-scrollbar-track {
+        background: var(--gray-100);
+        border-radius: 2px;
+    }
+    
+    .questions-list::-webkit-scrollbar-thumb {
+        background: var(--gray-300);
+        border-radius: 2px;
+    }
+    
+    .question-item {
+        margin-bottom: 0.5rem;
+        font-size: 0.8rem;
+        padding-left: 0.5rem;
+        border-left: 2px solid transparent;
+        transition: all 0.2s ease;
+        white-space: normal;
+        overflow: visible;
+        line-height: 1.3;
+    }
+    
+    .question-item:hover {
+        border-left-color: var(--primary-blue);
+    }
+    
+    .question-item a {
+        color: var(--gray-700);
+        text-decoration: none;
+        display: block;
+        padding: 0.25rem 0;
+        transition: color 0.2s ease;
+        white-space: normal;
+        overflow: visible;
+        text-overflow: initial;
+        max-width: 100%;
+    }
+    
+    .question-item a:hover {
+        color: var(--primary-blue);
+    }
+    
+    /* Language specific adjustments */
+    [lang="gu"] .section-title,
+    [lang="gu"] .category-title,
+    [lang="gu"] .question-item a {
+        font-family: 'Noto Serif Gujarati', serif;
+    }
+</style> 

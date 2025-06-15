@@ -1,0 +1,27 @@
+version: '3.8'
+
+services:
+  pdf_generator:
+    build: .
+    container_name: current_affairs_pdf_generator
+    volumes:
+      - ./src/output:/app/src/output
+    environment:
+      - MONGO_DB_URI=mongodb://mongodb:27017/
+      - TELEGRAM_BOT_TOKEN=${TELEGRAM_BOT_TOKEN}
+    depends_on:
+      - mongodb
+    command: python main.py
+    restart: unless-stopped
+
+  mongodb:
+    image: mongo:6
+    container_name: current_affairs_mongodb
+    volumes:
+      - mongodb_data:/data/db
+    ports:
+      - "27017:27017"
+    restart: unless-stopped
+
+volumes:
+  mongodb_data: 

@@ -1,0 +1,528 @@
+{% if language == 'en' %}
+<div class="cover-page">
+    <div class="logo-container">
+        <img src="{{ static_dir }}/images/logo.png" alt="Current Adda Logo" class="logo">
+    </div>
+    
+    <h1 class="title">Current Affairs Quiz</h1>
+    <h2 class="date">{{ date|date_format }}</h2>
+    
+    <div class="stats-container">
+        <div class="stat-box">
+            <div class="stat-value">{{ stats.total }}</div>
+            <div class="stat-label">Total Questions</div>
+        </div>
+        
+        <div class="stat-box">
+            <div class="stat-value">{{ stats.difficulty.easy|default(0) }}</div>
+            <div class="stat-label">Easy</div>
+        </div>
+        
+        <div class="stat-box">
+            <div class="stat-value">{{ stats.difficulty.medium|default(0) }}</div>
+            <div class="stat-label">Medium</div>
+        </div>
+        
+        <div class="stat-box">
+            <div class="stat-value">{{ stats.difficulty.hard|default(0) }}</div>
+            <div class="stat-label">Hard</div>
+        </div>
+    </div>
+    
+    <div class="categories-summary">
+        <h3>Categories</h3>
+        <div class="categories-grid">
+            {% for category, count in stats.categories.items() %}
+            <div class="category-item">
+                <span class="category-name">{{ category|title }}</span>
+                <span class="category-count">{{ count }}</span>
+            </div>
+            {% endfor %}
+        </div>
+    </div>
+    
+    <div class="telegram-promo">
+        <div class="qr-container">
+            <img src="{{ english_qr }}" alt="Telegram QR Code" class="qr-code">
+            <p>Scan to join our Telegram Channel</p>
+        </div>
+        
+        <div class="join-benefits">
+            <h3>Why Join Our Channel?</h3>
+            <ul>
+                <li><span class="benefit-icon">📝</span> Daily Updates</li>
+                <li><span class="benefit-icon">🆓</span> Free Access</li>
+                <li><span class="benefit-icon">⭐</span> Quality Content</li>
+            </ul>
+            <a href="https://t.me/daily_current_all_source" class="cover-join-button">
+                <span class="telegram-btn-icon">📱</span>
+                Join Our Telegram Channel
+            </a>
+            
+            
+        </div>
+    </div>
+    
+    <div class="source-attribution">
+        <p>Source: <a href="https://www.indiabix.com/current-affairs/">{{ source }}</a></p>
+        <p class="curator-credit">Curated by Ajay Ambaliya | <a href="https://instagram.com/ajayambaliyaa" class="social-link"><span class="instagram-icon-small"></span>@ajayambaliyaa</a></p>
+    </div>
+</div>
+{% else %}
+<div class="cover-page">
+    <div class="logo-container">
+        <img src="{{ static_dir }}/images/logo.png" alt="કરંટ અડ્ડા લોગો" class="logo">
+    </div>
+    
+    <h1 class="title">કરંટ અફેર્સ ક્વિઝ</h1>
+    <h2 class="date">{{ date }}</h2>
+    
+    <div class="stats-container">
+        <div class="stat-box">
+            <div class="stat-value">{{ stats.total }}</div>
+            <div class="stat-label">કુલ પ્રશ્નો</div>
+        </div>
+        
+        <div class="stat-box">
+            <div class="stat-value">{{ stats.difficulty.easy|default(0) }}</div>
+            <div class="stat-label">સરળ</div>
+        </div>
+        
+        <div class="stat-box">
+            <div class="stat-value">{{ stats.difficulty.medium|default(0) }}</div>
+            <div class="stat-label">મધ્યમ</div>
+        </div>
+        
+        <div class="stat-box">
+            <div class="stat-value">{{ stats.difficulty.hard|default(0) }}</div>
+            <div class="stat-label">અઘરું</div>
+        </div>
+    </div>
+    
+    <div class="categories-summary">
+        <h3>કેટેગરી</h3>
+        <div class="categories-grid">
+            {% for category, count in stats.categories.items() %}
+            <div class="category-item">
+                <span class="category-name">
+                    {% set cat = category|lower %}
+                    {% if cat == 'agriculture' %}કૃષિ
+                    {% elif cat == 'art and culture' %}કલા અને સંસ્કૃતિ
+                    {% elif cat == 'awards and honours' %}પુરસ્કાર અને સન્માન
+                    {% elif cat == 'banking' %}બેંકિંગ
+                    {% elif cat == 'bills and acts' %}બિલ અને કાયદા
+                    {% elif cat == 'business' %}વ્યાપાર
+                    {% elif cat == 'defence' %}સંરક્ષણ
+                    {% elif cat == 'economy' %}અર્થવ્યવસ્થા
+                    {% elif cat == 'education' %}શિક્ષણ
+                    {% elif cat == 'environment' %}પર્યાવરણ
+                    {% elif cat == 'festivity' %}ઉત્સવ
+                    {% elif cat == 'finance' %}નાણાં
+                    {% elif cat == 'important days' %}મહત્વપૂર્ણ દિવસો
+                    {% elif cat == 'international' %}આંતરરાષ્ટ્રીય
+                    {% elif cat == 'national' %}રાષ્ટ્રીય
+                    {% elif cat == 'obituary' %}શ્રદ્ધાંજલિ
+                    {% elif cat == 'persons' %}વ્યક્તિઓ
+                    {% elif cat == 'places' %}સ્થળો
+                    {% elif cat == 'politics' %}રાજકારણ
+                    {% elif cat == 'science' %}વિજ્ઞાન
+                    {% elif cat == 'sports' %}રમતગમત
+                    {% elif cat == 'state' %}રાજ્ય
+                    {% elif cat == 'talkies' %}ચલચિત્ર
+                    {% elif cat == 'technology' %}ટેકનોલોજી
+                    {% elif cat == 'miscellaneous' %}વિવિધ
+                    {% elif cat == 'general' %}સામાન્ય
+                    {% elif cat == 'geography' %}ભૂગોળ
+                    {% elif cat == 'history' %}ઇતિહાસ
+                    {% elif cat == 'awards' %}પુરસ્કાર
+                    {% else %}{{ category|title }}
+                    {% endif %}
+                </span>
+                <span class="category-count">{{ count }}</span>
+            </div>
+            {% endfor %}
+        </div>
+    </div>
+    
+    <div class="telegram-promo">
+        <div class="qr-container">
+            <img src="{{ gujarati_qr }}" alt="ટેલિગ્રામ QR કોડ" class="qr-code">
+            <p>અમારી ટેલિગ્રામ ચેનલમાં જોડાવા માટે સ્કેન કરો</p>
+        </div>
+        
+        <div class="join-benefits">
+            <h3>અમારી ચેનલમાં શા માટે જોડાવું?</h3>
+            <ul>
+                <li><span class="benefit-icon">📝</span> દૈનિક અપડેટ્સ</li>
+                <li><span class="benefit-icon">🆓</span> મફત એક્સેસ</li>
+                <li><span class="benefit-icon">⭐</span> ગુણવત્તાયુક્ત સામગ્રી</li>
+            </ul>
+            <a href="https://t.me/currentadda" class="cover-join-button">
+                <span class="telegram-btn-icon">📱</span>
+                અમારી ટેલિગ્રામ ચેનલમાં જોડાઓ
+            </a>
+            
+            <div class="other-channels">
+                <p>વધુ જોડાવવા માટે તપાસો:</p>
+                <a href="https://t.me/English_grammar_adda" class="mini-channel-link">
+                    <span class="mini-channel-icon">🇬🇧</span> English Grammar
+                </a>
+                <a href="https://t.me/pib_gujarati" class="mini-channel-link">
+                    <span class="mini-channel-icon">📰</span> PIB Gujarati
+                </a>
+            </div>
+        </div>
+    </div>
+    
+    <div class="source-attribution">
+        <p>સ્ત્રોત: <a href="https://www.indiabix.com/current-affairs/">{{ source }}</a></p>
+        <p class="curator-credit">અજય અંબાલિયા દ્વારા ક્યુરેટ કરેલ | <a href="https://instagram.com/ajayambaliyaa" class="social-link"><span class="instagram-icon-small"></span>@ajayambaliyaa</a></p>
+    </div>
+</div>
+{% endif %}
+
+<style>
+    .cover-page {
+        height: 100vh;
+        width: 100%;
+        display: flex;
+        flex-direction: column;
+        justify-content: space-between;
+        padding: 2rem;
+        background: linear-gradient(135deg, #f8fafc 0%, #e2e8f0 100%);
+        position: relative;
+        overflow: hidden;
+    }
+    
+    /* Decorative elements */
+    .cover-page::before {
+        content: '';
+        position: absolute;
+        top: -100px;
+        right: -100px;
+        width: 300px;
+        height: 300px;
+        border-radius: 50%;
+        background: linear-gradient(135deg, rgba(79, 172, 254, 0.1) 0%, rgba(0, 242, 254, 0.1) 100%);
+        z-index: 0;
+    }
+    
+    .cover-page::after {
+        content: '';
+        position: absolute;
+        bottom: -50px;
+        left: -50px;
+        width: 200px;
+        height: 200px;
+        border-radius: 50%;
+        background: linear-gradient(135deg, rgba(102, 126, 234, 0.1) 0%, rgba(118, 75, 162, 0.1) 100%);
+        z-index: 0;
+    }
+    
+    .logo-container {
+        text-align: center;
+        margin-bottom: 1.5rem;
+        position: relative;
+        z-index: 1;
+    }
+    
+    .logo {
+        max-width: 200px;
+        max-height: 80px;
+        filter: drop-shadow(0 4px 6px rgba(0, 0, 0, 0.1));
+    }
+    
+    .title {
+        font-size: 3rem;
+        text-align: center;
+        background: var(--gradient-primary);
+        -webkit-background-clip: text;
+        -webkit-text-fill-color: transparent;
+        margin-bottom: 0.5rem;
+        font-weight: 700;
+        position: relative;
+        z-index: 1;
+    }
+    
+    .date {
+        font-size: 1.5rem;
+        text-align: center;
+        color: var(--gray-700);
+        margin-bottom: 2.5rem;
+        position: relative;
+        z-index: 1;
+    }
+    
+    .stats-container {
+        display: flex;
+        justify-content: center;
+        gap: 1.5rem;
+        margin-bottom: 1.5rem;
+        position: relative;
+        z-index: 1;
+    }
+    
+    .stat-box {
+        background-color: white;
+        border-radius: 1rem;
+        padding: 1.25rem;
+        text-align: center;
+        min-width: 100px;
+        box-shadow: 0 4px 6px rgba(0, 0, 0, 0.05), 0 10px 15px rgba(0, 0, 0, 0.03);
+        transition: transform 0.2s ease;
+        border: 1px solid rgba(255, 255, 255, 0.8);
+    }
+    
+    .stat-value {
+        font-size: 2rem;
+        font-weight: 700;
+        background: var(--gradient-primary);
+        -webkit-background-clip: text;
+        -webkit-text-fill-color: transparent;
+        margin-bottom: 0.5rem;
+    }
+    
+    .stat-label {
+        font-size: 0.875rem;
+        color: var(--gray-600);
+        font-weight: 500;
+    }
+    
+    .categories-summary {
+        margin-bottom: 1.5rem;
+        position: relative;
+        z-index: 1;
+    }
+    
+    .categories-summary h3 {
+        text-align: center;
+        margin-bottom: 1rem;
+        color: var(--gray-800);
+        font-size: 1.25rem;
+        font-weight: 600;
+    }
+    
+    .categories-grid {
+        display: grid;
+        grid-template-columns: repeat(4, 1fr);
+        gap: 0.75rem;
+        max-height: 250px;
+        overflow-y: auto;
+        padding-right: 0.5rem;
+    }
+    
+    .category-item {
+        background-color: white;
+        border-radius: 0.75rem;
+        padding: 0.5rem;
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        box-shadow: 0 2px 4px rgba(0, 0, 0, 0.05);
+        border: 1px solid rgba(255, 255, 255, 0.8);
+    }
+    
+    .category-name {
+        font-size: 0.75rem;
+        color: var(--gray-700);
+        font-weight: 500;
+    }
+    
+    .category-count {
+        font-size: 0.75rem;
+        font-weight: 600;
+        color: var(--primary-blue);
+        background-color: rgba(59, 130, 246, 0.1);
+        padding: 0.25rem 0.5rem;
+        border-radius: 0.5rem;
+    }
+    
+    .telegram-promo {
+        display: flex;
+        justify-content: space-around;
+        align-items: center;
+        margin-bottom: 1rem;
+        background-color: white;
+        border-radius: 1rem;
+        padding: 1rem;
+        box-shadow: 0 4px 6px rgba(0, 0, 0, 0.05), 0 10px 15px rgba(0, 0, 0, 0.03);
+        position: relative;
+        z-index: 1;
+        border: 1px solid rgba(255, 255, 255, 0.8);
+    }
+    
+    .qr-container {
+        text-align: center;
+    }
+    
+    .qr-code {
+        width: 100px;
+        height: 100px;
+        margin-bottom: 0.5rem;
+        border-radius: 0.5rem;
+        box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+    }
+    
+    .qr-container p {
+        font-size: 0.875rem;
+        color: var(--gray-600);
+    }
+    
+    .join-benefits h3 {
+        font-size: 1.1rem;
+        margin-bottom: 0.75rem;
+        color: var(--gray-800);
+        font-weight: 600;
+    }
+    
+    .join-benefits ul {
+        list-style-type: none;
+        padding: 0;
+        margin-bottom: 1rem;
+    }
+    
+    .join-benefits li {
+        margin-bottom: 0.5rem;
+        display: flex;
+        align-items: center;
+        font-size: 0.9rem;
+    }
+    
+    .benefit-icon {
+        margin-right: 0.75rem;
+        font-size: 1.25rem;
+    }
+    
+    .source-attribution {
+        text-align: center;
+        font-size: 0.875rem;
+        color: var(--gray-500);
+        position: relative;
+        z-index: 1;
+        margin-bottom: 1rem;
+    }
+    
+    .source-attribution a {
+        color: var(--primary-blue);
+        text-decoration: none;
+        font-weight: 500;
+    }
+    
+    .source-attribution a:hover {
+        text-decoration: underline;
+    }
+
+    .cover-join-button {
+        display: inline-flex;
+        align-items: center;
+        justify-content: center;
+        padding: 0.5rem 1.25rem;
+        border-radius: 9999px;
+        background: linear-gradient(135deg, #0088cc 0%, #29b6f6 100%);
+        color: white;
+        font-weight: 600;
+        font-size: 0.9rem;
+        text-decoration: none;
+        transition: all 0.3s ease;
+        box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1), 0 1px 3px rgba(0, 0, 0, 0.08);
+        border: none;
+        cursor: pointer;
+        margin-top: 0.5rem;
+    }
+    
+    .cover-join-button:hover {
+        transform: translateY(-2px);
+        box-shadow: 0 7px 14px rgba(0, 0, 0, 0.1), 0 3px 6px rgba(0, 0, 0, 0.08);
+        background: linear-gradient(135deg, #0088cc 0%, #1e88e5 100%);
+    }
+    
+    .telegram-btn-icon {
+        margin-right: 0.75rem;
+        font-size: 1.25rem;
+    }
+
+    /* Scale content to fit on smaller screens */
+    @media (max-height: 900px) {
+        .stats-container {
+            margin-bottom: 1rem;
+        }
+        
+        .categories-summary {
+            margin-bottom: 1rem;
+        }
+        
+        .categories-grid {
+            max-height: 180px;
+        }
+        
+        .telegram-promo {
+            margin-bottom: 1rem;
+            padding: 0.75rem;
+        }
+        
+        .qr-code {
+            width: 80px;
+            height: 80px;
+        }
+        
+        .join-benefits h3 {
+            font-size: 1rem;
+            margin-bottom: 0.5rem;
+        }
+        
+        .join-benefits li {
+            margin-bottom: 0.25rem;
+            font-size: 0.8rem;
+        }
+        
+        .cover-join-button {
+            padding: 0.4rem 1rem;
+            font-size: 0.8rem;
+        }
+    }
+
+    /* Language specific adjustments */
+    [lang="gu"] .title,
+    [lang="gu"] .date,
+    [lang="gu"] .categories-summary h3,
+    [lang="gu"] .join-benefits h3,
+    [lang="gu"] .category-name,
+    [lang="gu"] .join-benefits li,
+    [lang="gu"] .qr-container p,
+    [lang="gu"] .source-attribution,
+    [lang="gu"] .cover-join-button {
+        font-family: 'Noto Serif Gujarati', serif;
+    }
+
+    .other-channels {
+        margin-top: 1rem;
+        font-size: 0.85rem;
+    }
+    
+    .other-channels p {
+        margin-bottom: 0.5rem;
+        color: var(--gray-600);
+        font-weight: 500;
+    }
+    
+    .mini-channel-link {
+        display: inline-block;
+        padding: 0.35rem 0.75rem;
+        background: rgba(59, 130, 246, 0.1);
+        color: var(--primary-blue);
+        border-radius: 9999px;
+        margin: 0.25rem;
+        font-size: 0.8rem;
+        font-weight: 500;
+        text-decoration: none;
+        transition: all 0.2s ease;
+    }
+    
+    .mini-channel-link:hover {
+        background: rgba(59, 130, 246, 0.2);
+    }
+    
+    .mini-channel-icon {
+        margin-right: 0.25rem;
+    }
+</style> 

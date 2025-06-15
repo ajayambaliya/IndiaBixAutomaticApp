@@ -1,0 +1,770 @@
+<!DOCTYPE html>
+<html lang="{{ language }}">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>{{ title }}</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
+    <!-- Include Noto Serif Gujarati font -->
+    <link href="https://fonts.googleapis.com/css2?family=Noto+Serif+Gujarati:wght@400;500;600;700&display=swap" rel="stylesheet">
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Noto+Serif+Gujarati:wght@400;500;600;700&display=swap');
+        
+        :root {
+            /* Colors */
+            --primary-blue: #3b82f6;
+            --primary-blue-light: #60a5fa;
+            --primary-blue-dark: #2563eb;
+            --secondary-purple: #8b5cf6;
+            --secondary-purple-light: #a78bfa;
+            --secondary-purple-dark: #7c3aed;
+            --accent-green: #10b981;
+            --accent-green-light: #34d399;
+            --accent-green-dark: #059669;
+            --gray-50: #f9fafb;
+            --gray-100: #f3f4f6;
+            --gray-200: #e5e7eb;
+            --gray-300: #d1d5db;
+            --gray-400: #9ca3af;
+            --gray-500: #6b7280;
+            --gray-600: #4b5563;
+            --gray-700: #374151;
+            --gray-800: #1f2937;
+            --gray-900: #111827;
+            
+            /* Spacing */
+            --space-1: 0.25rem;
+            --space-2: 0.5rem;
+            --space-3: 0.75rem;
+            --space-4: 1rem;
+            --space-5: 1.25rem;
+            --space-6: 1.5rem;
+            --space-8: 2rem;
+            --space-10: 2.5rem;
+            --space-12: 3rem;
+            --space-16: 4rem;
+            
+            /* Typography */
+            --text-xs: 0.75rem;
+            --text-sm: 0.875rem;
+            --text-base: 1rem;
+            --text-lg: 1.125rem;
+            --text-xl: 1.25rem;
+            --text-2xl: 1.5rem;
+            --text-3xl: 1.875rem;
+            --text-4xl: 2.25rem;
+            --text-5xl: 3rem;
+            
+            /* Gradients */
+            --gradient-primary: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            --gradient-secondary: linear-gradient(135deg, #f093fb 0%, #f5576c 100%);
+            --gradient-success: linear-gradient(135deg, #4facfe 0%, #00f2fe 100%);
+        }
+        
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        
+        body {
+            font-family: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
+            line-height: 1.6;
+            color: var(--gray-800);
+            background-color: white;
+        }
+        
+        /* Use Noto Serif Gujarati for Gujarati text */
+        [lang="gu"] {
+            font-family: 'Noto Serif Gujarati', serif;
+        }
+        
+        .page {
+            width: 100%;
+            height: 100vh;
+            page-break-after: always;
+            position: relative;
+            padding: 2rem;
+            overflow: hidden;
+        }
+        
+        .container {
+            max-width: 100%;
+            margin: 0 auto;
+        }
+        
+        h1, h2, h3, h4, h5, h6 {
+            color: var(--gray-900);
+            margin-bottom: 0.5em;
+            font-weight: 600;
+        }
+        
+        p {
+            margin-bottom: 1em;
+        }
+        
+        img {
+            max-width: 100%;
+        }
+        
+        .text-center {
+            text-align: center;
+        }
+        
+        .mt-2 { margin-top: 0.5rem; }
+        .mt-4 { margin-top: 1rem; }
+        .mt-6 { margin-top: 1.5rem; }
+        .mt-8 { margin-top: 2rem; }
+        
+        .mb-2 { margin-bottom: 0.5rem; }
+        .mb-4 { margin-bottom: 1rem; }
+        .mb-6 { margin-bottom: 1.5rem; }
+        .mb-8 { margin-bottom: 2rem; }
+        
+        .question-container {
+            margin-bottom: 2.5rem;
+            padding: 1.5rem;
+            border-radius: 1rem;
+            background: linear-gradient(145deg, #ffffff 0%, #f8fafc 100%);
+            border: 1px solid var(--gray-200);
+            box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1), 0 2px 4px -1px rgba(0, 0, 0, 0.06);
+            position: relative;
+            overflow: hidden;
+            break-inside: avoid;
+            page-break-inside: avoid; /* Prevent questions from breaking across pages */
+            page-break-before: auto; /* Allow page breaks before questions if needed */
+        }
+        
+        /* Social media share container */
+        .social-share-container {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-top: 1.5rem;
+            padding-top: 0.75rem;
+            border-top: 1px solid var(--gray-200);
+            background: linear-gradient(145deg, #f8fafc 0%, #f1f5f9 100%);
+            padding: 0.75rem 1rem;
+            border-radius: 0.5rem;
+        }
+        
+        .social-share-links {
+            display: flex;
+            align-items: center;
+            gap: 1.25rem;
+        }
+        
+        .social-share-link {
+            display: flex;
+            align-items: center;
+            color: var(--gray-700);
+            font-size: 0.9rem;
+            font-weight: 500;
+            text-decoration: none;
+            transition: all 0.2s ease;
+            padding: 0.35rem 0.75rem;
+            border-radius: 0.5rem;
+            background-color: white;
+            box-shadow: 0 1px 2px rgba(0, 0, 0, 0.05);
+            border: 1px solid var(--gray-200);
+        }
+        
+        .social-share-link:hover {
+            color: var(--primary-blue);
+            transform: translateY(-2px);
+            box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1), 0 2px 4px -1px rgba(0, 0, 0, 0.06);
+        }
+        
+        .social-share-icon {
+            margin-right: 0.5rem;
+            font-size: 1.1rem;
+        }
+        
+        .next-page-link {
+            display: flex;
+            align-items: center;
+            color: var(--primary-blue);
+            font-weight: 600;
+            font-size: 1.1rem;
+            background-color: white;
+            padding: 0.35rem 0.75rem;
+            border-radius: 0.5rem;
+            box-shadow: 0 1px 2px rgba(0, 0, 0, 0.05);
+            border: 1px solid var(--gray-200);
+            transition: all 0.2s ease;
+        }
+        
+        .next-page-link:hover {
+            transform: translateX(2px);
+            box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1), 0 2px 4px -1px rgba(0, 0, 0, 0.06);
+        }
+        
+        /* Instagram icon */
+        .instagram-icon {
+            color: #E1306C;
+        }
+        
+        /* Telegram icon */
+        .telegram-icon {
+            color: #0088cc;
+        }
+        
+        .question-container::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            height: 4px;
+            background: var(--gradient-primary);
+        }
+        
+        .question-container[data-difficulty="easy"]::before {
+            background: var(--gradient-success);
+        }
+        
+        .question-container[data-difficulty="medium"]::before {
+            background: linear-gradient(135deg, #fbbf24 0%, #f59e0b 100%);
+        }
+        
+        .question-container[data-difficulty="hard"]::before {
+            background: linear-gradient(135deg, #ef4444 0%, #dc2626 100%);
+        }
+        
+        .question-text {
+            font-weight: 600;
+            font-size: 1.1rem;
+            color: var(--gray-900);
+            margin-bottom: 1.5rem;
+            line-height: 1.5;
+        }
+        
+        .options-container {
+            display: grid;
+            grid-template-columns: 1fr;
+            gap: 0.75rem;
+            margin-bottom: 1.5rem;
+        }
+        
+        .option {
+            display: flex;
+            align-items: flex-start;
+            padding: 0.75rem 1rem;
+            border-radius: 0.5rem;
+            background-color: white;
+            border: 1px solid var(--gray-200);
+            transition: all 0.2s ease;
+        }
+        
+        .option-letter {
+            font-weight: 600;
+            color: var(--primary-blue);
+            margin-right: 0.75rem;
+            min-width: 1.5rem;
+        }
+        
+        .correct-answer {
+            background-color: rgba(16, 185, 129, 0.1);
+            border-color: var(--accent-green);
+            box-shadow: 0 1px 3px rgba(16, 185, 129, 0.2);
+        }
+        
+        .explanation {
+            padding: 1.25rem;
+            background-color: rgba(59, 130, 246, 0.05);
+            border-radius: 0.5rem;
+            border-left: 4px solid var(--primary-blue);
+            margin-top: 1rem;
+        }
+        
+        .explanation-title {
+            font-weight: 600;
+            color: var(--primary-blue);
+            margin-bottom: 0.75rem;
+        }
+        
+        .category-badge {
+            display: inline-block;
+            padding: 0.25rem 0.75rem;
+            border-radius: 9999px;
+            font-size: 0.75rem;
+            font-weight: 500;
+            color: white;
+            background-color: var(--secondary-purple);
+            margin-right: 0.5rem;
+        }
+        
+        .difficulty-badge {
+            display: inline-block;
+            padding: 0.25rem 0.75rem;
+            border-radius: 9999px;
+            font-size: 0.75rem;
+            font-weight: 500;
+            color: white;
+            margin-right: 0.5rem;
+        }
+        
+        .difficulty-easy {
+            background-color: var(--accent-green);
+        }
+        
+        .difficulty-medium {
+            background-color: #f59e0b;
+        }
+        
+        .difficulty-hard {
+            background-color: #ef4444;
+        }
+        
+        .category-title-header {
+            background: linear-gradient(90deg, var(--primary-blue) 0%, var(--secondary-purple) 100%);
+            color: white;
+            padding: 0.75rem 1.5rem;
+            border-radius: 0.75rem;
+            margin-bottom: 1.5rem;
+            text-align: center;
+            font-size: 1.5rem;
+            font-weight: 600;
+            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+            position: relative;
+            overflow: hidden;
+        }
+        
+        .category-title-header::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: linear-gradient(45deg, rgba(255, 255, 255, 0.1) 0%, rgba(255, 255, 255, 0) 100%);
+            z-index: 1;
+        }
+        
+        /* Promotional box styling */
+        .promotional-box {
+            margin: 3rem auto;
+            max-width: 90%;
+            padding: 1.5rem;
+            border-radius: 1rem;
+            background: linear-gradient(135deg, rgba(102, 126, 234, 0.1) 0%, rgba(118, 75, 162, 0.1) 100%);
+            border: 1px solid rgba(139, 92, 246, 0.3);
+            box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.1), 0 4px 6px -2px rgba(0, 0, 0, 0.05);
+            position: relative;
+            overflow: hidden;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            text-align: center;
+            break-inside: avoid;
+            page-break-inside: avoid;
+        }
+        
+        .promotional-box::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            height: 4px;
+            background: var(--gradient-primary);
+        }
+        
+        .promotional-title {
+            font-size: 1.5rem;
+            font-weight: 700;
+            margin-bottom: 1rem;
+            color: var(--gray-900);
+        }
+        
+        .promotional-description {
+            font-size: 1rem;
+            margin-bottom: 1.5rem;
+            color: var(--gray-700);
+            max-width: 80%;
+        }
+        
+        .promotional-features {
+            display: flex;
+            justify-content: center;
+            gap: 2rem;
+            margin-bottom: 1.5rem;
+        }
+        
+        .feature-item {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            text-align: center;
+        }
+        
+        .feature-icon {
+            font-size: 2rem;
+            margin-bottom: 0.5rem;
+        }
+        
+        .feature-text {
+            font-size: 0.875rem;
+            font-weight: 500;
+            color: var(--gray-700);
+        }
+        
+        .join-button {
+            padding: 0.75rem 2rem;
+            border-radius: 9999px;
+            background: var(--gradient-primary);
+            color: white;
+            font-weight: 600;
+            font-size: 1rem;
+            text-decoration: none;
+            transition: all 0.2s ease;
+            border: none;
+            cursor: pointer;
+            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+        }
+        
+        .join-button:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 6px 8px rgba(0, 0, 0, 0.15);
+        }
+
+        /* Ensure proper page breaks */
+        @media print {
+            .question-container {
+                page-break-inside: avoid;
+                page-break-before: auto;
+            }
+            
+            .promotional-box {
+                page-break-inside: avoid;
+                page-break-before: auto;
+            }
+            
+
+        }
+
+        /* Additional styles for the promotional page */
+        .additional-channels {
+            margin-top: 2rem;
+            width: 100%;
+            text-align: center;
+        }
+        
+        .additional-channels-title {
+            font-size: 1.25rem;
+            font-weight: 600;
+            color: var(--gray-800);
+            margin-bottom: 1rem;
+            position: relative;
+            display: inline-block;
+        }
+        
+        .additional-channels-title::after {
+            content: '';
+            position: absolute;
+            bottom: -0.5rem;
+            left: 25%;
+            width: 50%;
+            height: 2px;
+            background: var(--gradient-primary);
+            border-radius: 2px;
+        }
+        
+        .channel-cards {
+            display: flex;
+            justify-content: center;
+            gap: 1.5rem;
+            margin-top: 1rem;
+        }
+        
+        .channel-card {
+            background: white;
+            border-radius: 0.75rem;
+            padding: 1.25rem;
+            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.05);
+            border: 1px solid var(--gray-200);
+            width: 45%;
+            max-width: 250px;
+            transition: transform 0.2s ease, box-shadow 0.2s ease;
+        }
+        
+        .channel-card:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 10px 15px rgba(0, 0, 0, 0.1);
+        }
+        
+        .channel-icon {
+            font-size: 2rem;
+            margin-bottom: 0.75rem;
+        }
+        
+        .channel-name {
+            font-size: 1.1rem;
+            font-weight: 600;
+            color: var(--gray-800);
+            margin-bottom: 0.5rem;
+        }
+        
+        .channel-description {
+            font-size: 0.875rem;
+            color: var(--gray-600);
+            margin-bottom: 1rem;
+            line-height: 1.4;
+        }
+        
+        .channel-link {
+            display: inline-block;
+            padding: 0.5rem 1rem;
+            background: linear-gradient(135deg, var(--primary-blue-light) 0%, var(--primary-blue) 100%);
+            color: white;
+            border-radius: 9999px;
+            font-size: 0.875rem;
+            font-weight: 500;
+            text-decoration: none;
+            transition: all 0.2s ease;
+        }
+        
+        .channel-link:hover {
+            background: linear-gradient(135deg, var(--primary-blue) 0%, var(--primary-blue-dark) 100%);
+            box-shadow: 0 4px 6px rgba(37, 99, 235, 0.2);
+        }
+    </style>
+</head>
+<body {% if language == 'gu' %}lang="gu"{% endif %}>
+    <!-- Cover Page -->
+    <div class="page">
+        {% include 'cover_page.html' %}
+    </div>
+    
+    <!-- Categories Page -->
+    <div class="page">
+        {% include 'categories.html' %}
+    </div>
+    
+    <!-- Questions Pages - One question per page -->
+    {% for category, questions in categorized_questions.items() %}
+        <!-- Category title page with first question -->
+        <div class="page">
+            <div class="container">
+                {% if language == 'en' %}
+                <h2 class="category-title-header">{{ category|title }} Questions</h2>
+                {% else %}
+                <h2 class="category-title-header">
+                    {% set cat = category|lower %}
+                    {% if cat == 'agriculture' %}કૃષિ
+                    {% elif cat == 'art and culture' %}કલા અને સંસ્કૃતિ
+                    {% elif cat == 'awards and honours' %}પુરસ્કાર અને સન્માન
+                    {% elif cat == 'banking' %}બેંકિંગ
+                    {% elif cat == 'bills and acts' %}બિલ અને કાયદા
+                    {% elif cat == 'business' %}વ્યાપાર
+                    {% elif cat == 'defence' %}સંરક્ષણ
+                    {% elif cat == 'economy' %}અર્થવ્યવસ્થા
+                    {% elif cat == 'education' %}શિક્ષણ
+                    {% elif cat == 'environment' %}પર્યાવરણ
+                    {% elif cat == 'festivity' %}ઉત્સવ
+                    {% elif cat == 'finance' %}નાણાં
+                    {% elif cat == 'important days' %}મહત્વપૂર્ણ દિવસો
+                    {% elif cat == 'international' %}આંતરરાષ્ટ્રીય
+                    {% elif cat == 'national' %}રાષ્ટ્રીય
+                    {% elif cat == 'obituary' %}શ્રદ્ધાંજલિ
+                    {% elif cat == 'persons' %}વ્યક્તિઓ
+                    {% elif cat == 'places' %}સ્થળો
+                    {% elif cat == 'politics' %}રાજકારણ
+                    {% elif cat == 'science' %}વિજ્ઞાન
+                    {% elif cat == 'sports' %}રમતગમત
+                    {% elif cat == 'state' %}રાજ્ય
+                    {% elif cat == 'talkies' %}ચલચિત્ર
+                    {% elif cat == 'technology' %}ટેકનોલોજી
+                    {% elif cat == 'miscellaneous' %}વિવિધ
+                    {% elif cat == 'general' %}સામાન્ય
+                    {% elif cat == 'geography' %}ભૂગોળ
+                    {% elif cat == 'history' %}ઇતિહાસ
+                    {% elif cat == 'awards' %}પુરસ્કાર
+                    {% else %}{{ category|title }}
+                    {% endif %}
+                    પ્રશ્નો
+                </h2>
+                {% endif %}
+                
+                {% if questions|length > 0 %}
+                <div id="question-{{ questions[0].index }}" class="question-container" data-difficulty="{{ questions[0].difficulty }}">
+                    <div class="question-text">{{ questions[0].index }}. {{ questions[0].question_text }}</div>
+                    
+                    <div class="options-container">
+                        {% for key, value in questions[0].options.items() %}
+                            {% set option_letter = key[-1]|upper %}
+                            <div class="option {% if questions[0].correct_answer_key == option_letter %}correct-answer{% endif %}">
+                                <div class="option-letter">{{ option_letter }}.</div>
+                                <div>{{ value }}</div>
+                            </div>
+                        {% endfor %}
+                    </div>
+                    
+                    <div class="explanation">
+                        {% if language == 'en' %}
+                        <div class="explanation-title">Explanation:</div>
+                        {% else %}
+                        <div class="explanation-title">સમજૂતી:</div>
+                        {% endif %}
+                        <div>{{ questions[0].explanation }}</div>
+                    </div>
+                    
+                    <!-- Social Media Share Section -->
+                    <div class="social-share-container">
+                        <div class="social-share-links">
+                            <a href="https://www.instagram.com/CurrentAddaa" class="social-share-link" target="_blank">
+                                <span class="social-share-icon instagram-icon"><i class="fab fa-instagram"></i></span>
+                                @CurrentAddaa
+                            </a>
+                            <a href="https://t.me/CurrentAdda" class="social-share-link" target="_blank">
+                                <span class="social-share-icon telegram-icon"><i class="fab fa-telegram-plane"></i></span>
+                                @CurrentAdda
+                            </a>
+                        </div>
+                        <div class="next-page-link">
+                            <i class="fas fa-angle-double-right"></i>
+                        </div>
+                    </div>
+                </div>
+                {% endif %}
+            </div>
+        </div>
+                
+        <!-- Each remaining question on its own page -->
+        {% for question in questions[1:] %}
+        <div class="page">
+            <div class="container">
+                <div id="question-{{ question.index }}" class="question-container" data-difficulty="{{ question.difficulty }}">
+                    <div class="question-text">{{ question.index }}. {{ question.question_text }}</div>
+                    
+                    <div class="options-container">
+                        {% for key, value in question.options.items() %}
+                            {% set option_letter = key[-1]|upper %}
+                            <div class="option {% if question.correct_answer_key == option_letter %}correct-answer{% endif %}">
+                                <div class="option-letter">{{ option_letter }}.</div>
+                                <div>{{ value }}</div>
+                            </div>
+                        {% endfor %}
+                    </div>
+                    
+                    <div class="explanation">
+                        {% if language == 'en' %}
+                        <div class="explanation-title">Explanation:</div>
+                        {% else %}
+                        <div class="explanation-title">સમજૂતી:</div>
+                        {% endif %}
+                        <div>{{ question.explanation }}</div>
+                    </div>
+                    
+                    <!-- Social Media Share Section -->
+                    <div class="social-share-container">
+                        <div class="social-share-links">
+                            <a href="https://www.instagram.com/CurrentAddaa" class="social-share-link" target="_blank">
+                                <span class="social-share-icon instagram-icon"><i class="fab fa-instagram"></i></span>
+                                @CurrentAddaa
+                            </a>
+                            <a href="https://t.me/CurrentAdda" class="social-share-link" target="_blank">
+                                <span class="social-share-icon telegram-icon"><i class="fab fa-telegram-plane"></i></span>
+                                @CurrentAdda
+                            </a>
+                        </div>
+                        <div class="next-page-link">
+                            <i class="fas fa-angle-double-right"></i>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        {% endfor %}
+    {% endfor %}
+    
+    <!-- Promotional Box on its own page -->
+    <div class="page">
+        <div class="container" style="display: flex; flex-direction: column; justify-content: center; align-items: center; height: 100%;">
+            <div class="promotional-box">
+                {% if language == 'en' %}
+                <h3 class="promotional-title">Stay Updated with Daily Current Affairs!</h3>
+                <p class="promotional-description">Join our Telegram channel for free access to daily current affairs updates, quizzes, and educational content.</p>
+                
+                <div class="promotional-features">
+                    <div class="feature-item">
+                        <div class="feature-icon">📝</div>
+                        <div class="feature-text">Daily Updates</div>
+                    </div>
+                    <div class="feature-item">
+                        <div class="feature-icon">🆓</div>
+                        <div class="feature-text">Free Access</div>
+                    </div>
+                    <div class="feature-item">
+                        <div class="feature-icon">⭐</div>
+                        <div class="feature-text">Quality Content</div>
+                    </div>
+                </div>
+                
+                <a href="https://t.me/daily_current_all_source" class="join-button">Join Now</a>
+                
+                <div class="additional-channels">
+                    <h4 class="additional-channels-title">Explore Our Other Channels</h4>
+                    
+                    <div class="channel-cards">
+                        <div class="channel-card">
+                            <div class="channel-icon">🇬🇧</div>
+                            <h5 class="channel-name">English Grammar Quiz</h5>
+                            <p class="channel-description">Daily English grammar quizzes with PDF answers</p>
+                            <a href="https://t.me/English_grammar_adda" class="channel-link">@English_grammar_adda</a>
+                        </div>
+                        
+                        <div class="channel-card">
+                            <div class="channel-icon">📰</div>
+                            <h5 class="channel-name">PIB in Gujarati</h5>
+                            <p class="channel-description">Daily PIB articles in Gujarati language</p>
+                            <a href="https://t.me/pib_gujarati" class="channel-link">@pib_gujarati</a>
+                        </div>
+                    </div>
+                </div>
+                {% else %}
+                <h3 class="promotional-title">દૈનિક કરંટ અફેર્સ સાથે અપડેટ રહો!</h3>
+                <p class="promotional-description">દૈનિક કરંટ અફેર્સ અપડેટ્સ, ક્વિઝ અને શૈક્ષણિક સામગ્રી માટે અમારી ટેલિગ્રામ ચેનલમાં જોડાઓ.</p>
+                
+                <div class="promotional-features">
+                    <div class="feature-item">
+                        <div class="feature-icon">📝</div>
+                        <div class="feature-text">દૈનિક અપડેટ્સ</div>
+                    </div>
+                    <div class="feature-item">
+                        <div class="feature-icon">🆓</div>
+                        <div class="feature-text">મફત એક્સેસ</div>
+                    </div>
+                    <div class="feature-item">
+                        <div class="feature-icon">⭐</div>
+                        <div class="feature-text">ગુણવત્તાયુક્ત સામગ્રી</div>
+                    </div>
+                </div>
+                
+                <a href="https://t.me/currentadda" class="join-button">અત્યારે જોડાઓ</a>
+                
+                <div class="additional-channels">
+                    <h4 class="additional-channels-title">અમારી અન્ય ચેનલો એક્સપ્લોર કરો</h4>
+                    
+                    <div class="channel-cards">
+                        <div class="channel-card">
+                            <div class="channel-icon">🇬🇧</div>
+                            <h5 class="channel-name">અંગ્રેજી વ્યાકરણ ક્વિઝ</h5>
+                            <p class="channel-description">દૈનિક અંગ્રેજી વ્યાકરણ ક્વિઝ PDF જવાબો સાથે</p>
+                            <a href="https://t.me/English_grammar_adda" class="channel-link">@English_grammar_adda</a>
+                        </div>
+                        
+                        <div class="channel-card">
+                            <div class="channel-icon">📰</div>
+                            <h5 class="channel-name">PIB ગુજરાતીમાં</h5>
+                            <p class="channel-description">ગુજરાતી ભાષામાં દૈનિક PIB લેખો</p>
+                            <a href="https://t.me/pib_gujarati" class="channel-link">@pib_gujarati</a>
+                        </div>
+                    </div>
+                </div>
+                {% endif %}
+            </div>
+        </div>
+    </div>
+</body>
+</html> 

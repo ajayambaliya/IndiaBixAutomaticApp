@@ -1,0 +1,146 @@
+/* Print-specific styles */
+
+@page {
+  size: A4;
+  margin: 0.5in;
+  counter-increment: page;
+}
+
+@page :first {
+  margin-top: 0;
+}
+
+body {
+  -webkit-print-color-adjust: exact !important;
+  print-color-adjust: exact !important;
+}
+
+/* Hide elements that shouldn't be printed */
+.no-print {
+  display: none !important;
+}
+
+/* Page breaks */
+.page-break-before {
+  page-break-before: always;
+}
+
+.page-break-after {
+  page-break-after: always;
+}
+
+.avoid-break {
+  page-break-inside: avoid;
+}
+
+/* Ensure question cards don't break across pages */
+.question-card {
+  page-break-inside: avoid;
+}
+
+/* Ensure category headers don't break */
+.category-header {
+  page-break-after: avoid;
+}
+
+/* Ensure footer appears on every page */
+.footer {
+  position: fixed;
+  bottom: 0;
+  width: 100%;
+}
+
+/* Ensure links show their URLs */
+a[href^="http"]:after {
+  content: " (" attr(href) ")";
+  font-size: var(--text-xs);
+  font-weight: normal;
+  color: var(--gray-600);
+}
+
+/* Don't show URL for QR code links and buttons */
+a.channel-link:after,
+a.join-button:after {
+  content: none !important;
+}
+
+/* Optimize images for print */
+img {
+  max-width: 100% !important;
+  max-height: 100% !important;
+}
+
+/* Ensure backgrounds and colors print properly */
+.question-card,
+.stat-card,
+.channel-card,
+.benefit-item,
+.testimonial-item {
+  border: 1px solid var(--gray-300) !important;
+  box-shadow: none !important;
+}
+
+/* Ensure gradients print properly with fallback colors */
+.question-card::before {
+  background: var(--primary-blue) !important;
+}
+
+.question-card[data-difficulty="easy"]::before {
+  background: var(--secondary-green) !important;
+}
+
+.question-card[data-difficulty="medium"]::before {
+  background: var(--secondary-orange) !important;
+}
+
+.question-card[data-difficulty="hard"]::before {
+  background: #dc2626 !important;
+}
+
+/* Ensure text remains readable in print */
+.promotion-title,
+.main-title {
+  background: none !important;
+  -webkit-text-fill-color: var(--primary-blue) !important;
+  color: var(--primary-blue) !important;
+}
+
+/* Optimize font sizes for print */
+body {
+  font-size: 11pt !important;
+}
+
+h1 {
+  font-size: 24pt !important;
+}
+
+h2 {
+  font-size: 18pt !important;
+}
+
+h3 {
+  font-size: 14pt !important;
+}
+
+.text-xs {
+  font-size: 8pt !important;
+}
+
+.text-sm {
+  font-size: 9pt !important;
+}
+
+/* Ensure QR codes print clearly */
+.channel-qr img {
+  border: 1px solid var(--gray-300);
+}
+
+/* Optimize page margins for content */
+.page-content {
+  padding: 0.25in !important;
+}
+
+/* Ensure decorative elements don't interfere with content */
+.decorative-elements {
+  opacity: 0.05 !important;
+} 

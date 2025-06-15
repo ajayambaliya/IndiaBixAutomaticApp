@@ -1,0 +1,323 @@
+{% for category, questions in categorized_questions.items() %}
+<div class="page">
+    <div class="page-content">
+        <div class="category-header">
+            <h2 class="category-title">{{ category|title }}</h2>
+            <div class="category-count">{{ questions|length }} Questions</div>
+        </div>
+        
+        <div class="questions-container">
+            {% for question in questions %}
+            <div class="question-card" data-difficulty="{{ question.difficulty }}">
+                <div class="question-header">
+                    <span class="question-number">Q{{ question.index }}</span>
+                    <span class="difficulty-badge {{ question.difficulty }}">{{ question.difficulty|title }}</span>
+                </div>
+                
+                <div class="question-content">
+                    <h3 class="question-text">{{ question.question_text }}</h3>
+                    
+                    <div class="options-grid">
+                        {% for key, option_text in question.options.items() %}
+                        <div class="option-item {% if key == 'option_' + question.correct_answer_key|lower %}correct{% endif %}">
+                            <span class="option-letter">{{ key[-1:]|upper }}</span>
+                            <span class="option-text">{{ option_text }}</span>
+                            {% if key == 'option_' + question.correct_answer_key|lower %}
+                            <span class="correct-indicator">✓</span>
+                            {% endif %}
+                        </div>
+                        {% endfor %}
+                    </div>
+                </div>
+                
+                <div class="explanation-section">
+                    <h4 class="explanation-title">💡 Explanation</h4>
+                    <p class="explanation-text">{{ question.explanation }}</p>
+                </div>
+                
+                <div class="question-footer">
+                    <div class="tags">
+                        <span class="tag">{{ question.category }}</span>
+                        <span class="tag">{{ question.date }}</span>
+                    </div>
+                    
+                    <!-- Social Media Share Section -->
+                    <div class="social-share-container">
+                        <div class="social-share-links">
+                            <a href="https://www.instagram.com/CurrentAddaa" class="social-share-link" target="_blank">
+                                <span class="social-share-icon instagram-icon"><i class="fab fa-instagram"></i></span>
+                                @CurrentAddaa
+                            </a>
+                            <a href="https://t.me/CurrentAdda" class="social-share-link" target="_blank">
+                                <span class="social-share-icon telegram-icon"><i class="fab fa-telegram-plane"></i></span>
+                                @CurrentAdda
+                            </a>
+                        </div>
+                        <div class="next-page-link">
+                            <i class="fas fa-angle-double-right"></i>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            {% endfor %}
+        </div>
+    </div>
+</div>
+{% endfor %}
+
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
+<style>
+    .page-content {
+        padding: var(--space-6);
+    }
+    
+    .category-header {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        margin-bottom: var(--space-6);
+        padding-bottom: var(--space-3);
+        border-bottom: 2px solid var(--gray-200);
+    }
+    
+    .category-title {
+        font-size: var(--text-3xl);
+        font-weight: 700;
+        color: var(--gray-900);
+        margin: 0;
+    }
+    
+    .category-count {
+        font-size: var(--text-lg);
+        font-weight: 500;
+        color: var(--gray-600);
+    }
+    
+    .questions-container {
+        display: flex;
+        flex-direction: column;
+        gap: var(--space-6);
+    }
+    
+    .question-card {
+        background: linear-gradient(145deg, #ffffff 0%, #f8fafc 100%);
+        border-radius: 16px;
+        box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1), 0 2px 4px -1px rgba(0, 0, 0, 0.06);
+        padding: var(--space-6);
+        border: 1px solid var(--gray-200);
+        position: relative;
+        overflow: hidden;
+    }
+    
+    .question-card::before {
+        content: '';
+        position: absolute;
+        top: 0;
+        left: 0;
+        right: 0;
+        height: 4px;
+        background: var(--gradient-primary);
+    }
+    
+    .question-card[data-difficulty="easy"]::before {
+        background: var(--gradient-success);
+    }
+    
+    .question-card[data-difficulty="medium"]::before {
+        background: linear-gradient(135deg, #fbbf24 0%, #f59e0b 100%);
+    }
+    
+    .question-card[data-difficulty="hard"]::before {
+        background: linear-gradient(135deg, #ef4444 0%, #dc2626 100%);
+    }
+    
+    .question-header {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        margin-bottom: var(--space-4);
+    }
+    
+    .question-number {
+        font-size: var(--text-lg);
+        font-weight: 600;
+        color: var(--gray-800);
+    }
+    
+    .difficulty-badge {
+        font-size: var(--text-xs);
+        font-weight: 500;
+        padding: var(--space-1) var(--space-2);
+        border-radius: 9999px;
+        text-transform: uppercase;
+        letter-spacing: 0.05em;
+    }
+    
+    .difficulty-badge.easy {
+        background-color: #ecfdf5;
+        color: #059669;
+    }
+    
+    .difficulty-badge.medium {
+        background-color: #fffbeb;
+        color: #d97706;
+    }
+    
+    .difficulty-badge.hard {
+        background-color: #fef2f2;
+        color: #dc2626;
+    }
+    
+    .question-text {
+        font-family: var(--font-primary);
+        font-size: var(--text-lg);
+        font-weight: 500;
+        line-height: var(--leading-relaxed);
+        color: var(--gray-800);
+        margin-bottom: var(--space-4);
+    }
+    
+    .options-grid {
+        display: grid;
+        grid-template-columns: repeat(2, 1fr);
+        gap: var(--space-3);
+        margin-bottom: var(--space-4);
+    }
+    
+    .option-item {
+        display: flex;
+        align-items: center;
+        padding: var(--space-2) var(--space-3);
+        border-radius: 8px;
+        border: 1px solid var(--gray-200);
+        background-color: white;
+        position: relative;
+    }
+    
+    .option-item.correct {
+        background-color: #f0fdf4;
+        border-color: #22c55e;
+    }
+    
+    .option-letter {
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        width: 24px;
+        height: 24px;
+        border-radius: 50%;
+        background-color: var(--gray-100);
+        color: var(--gray-800);
+        font-weight: 600;
+        font-size: var(--text-sm);
+        margin-right: var(--space-2);
+    }
+    
+    .option-item.correct .option-letter {
+        background-color: #22c55e;
+        color: white;
+    }
+    
+    .option-text {
+        flex: 1;
+        font-size: var(--text-sm);
+    }
+    
+    .correct-indicator {
+        position: absolute;
+        right: var(--space-3);
+        color: #22c55e;
+        font-weight: 700;
+    }
+    
+    .explanation-section {
+        background: var(--gray-50);
+        padding: var(--space-4);
+        border-radius: 8px;
+        margin-bottom: var(--space-4);
+    }
+    
+    .explanation-title {
+        font-size: var(--text-base);
+        font-weight: 600;
+        margin-bottom: var(--space-2);
+        color: var(--gray-800);
+    }
+    
+    .explanation-text {
+        font-size: var(--text-sm);
+        line-height: var(--leading-normal);
+        color: var(--gray-600);
+    }
+    
+    .question-footer {
+        display: flex;
+        flex-direction: column;
+        margin-top: var(--space-4);
+        padding-top: var(--space-3);
+        border-top: 1px solid var(--gray-200);
+    }
+    
+    .tags {
+        display: flex;
+        gap: var(--space-2);
+        margin-bottom: var(--space-3);
+    }
+    
+    .tag {
+        font-size: var(--text-xs);
+        padding: var(--space-1) var(--space-2);
+        border-radius: 4px;
+        background-color: var(--gray-100);
+        color: var(--gray-600);
+    }
+    
+    /* Social media share styles */
+    .social-share-container {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        margin-top: 1rem;
+        padding-top: 0.75rem;
+        border-top: 1px solid var(--gray-200);
+    }
+    
+    .social-share-links {
+        display: flex;
+        align-items: center;
+        gap: 1rem;
+    }
+    
+    .social-share-link {
+        display: flex;
+        align-items: center;
+        color: var(--gray-600);
+        font-size: 0.9rem;
+        font-weight: 500;
+        text-decoration: none;
+    }
+    
+    .social-share-link:hover {
+        color: var(--primary-blue);
+    }
+    
+    .social-share-icon {
+        margin-right: 0.5rem;
+    }
+    
+    .next-page-link {
+        display: flex;
+        align-items: center;
+        color: var(--primary-blue);
+        font-weight: 600;
+    }
+    
+    /* Page break handling */
+    .question-card {
+        page-break-inside: avoid;
+    }
+    
+    .category-header {
+        page-break-after: avoid;
+    }
+</style> 
