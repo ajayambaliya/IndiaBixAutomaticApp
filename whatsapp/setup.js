@@ -47,7 +47,7 @@ async function setup() {
             dataPath: './.wwebjs_auth' 
         }),
         puppeteer: {
-            headless: false,
+            headless: true, // MUST BE TRUE TO MATCH GITHUB
             args: [
                 '--no-sandbox',
                 '--disable-setuid-sandbox',
@@ -128,25 +128,28 @@ async function setup() {
                 }
             });
 
-            // 2. ZIP MANUALLY
+            // 2. ZIP MANUALLY (ROBUST WAY)
             const archiver = require('archiver');
-            const chunks = [];
+            const streamBuffers = require('stream-buffers');
+            const myWritableStreamBuffer = new streamBuffers.WritableStreamBuffer();
             const archive = archiver('zip', { zlib: { level: 9 } });
-            archive.on('data', (chunk) => chunks.push(chunk));
-            
+
             console.log('  📦 Zipping session...');
+            archive.pipe(myWritableStreamBuffer);
             archive.directory(sessionDir, false);
             await archive.finalize();
-            const buffer = Buffer.concat(chunks);
 
-        // Find the collection
-        const SessionModel = mongoose.models.WhatsAppSession || mongoose.model('WhatsAppSession', new mongoose.Schema({
-            id: String,
-            session: Buffer
-        }, { collection: 'whatsapp_sessions' }));
+            const buffer = myWritableStreamBuffer.getContents();
+            console.log(`  📊 Final Zip Size: ${(buffer.length / 1024 / 1024).toFixed(2)} MB`);
 
-        console.log('  📤 Uploading to "whatsapp_sessions" collection...');
-        await SessionModel.findOneAndUpdate({ id: clientId }, { session: buffer }, { upsert: true });
+            // 3. PUSH TO MONGO
+            const SessionModel = mongoose.models.WhatsAppSession || mongoose.model('WhatsAppSession', new mongoose.Schema({
+                id: String,
+                session: Buffer
+            }, { collection: 'whatsapp_sessions' }));
+
+            console.log('  📤 Uploading to MongoDB...');
+            await SessionModel.findOneAndUpdate({ id: clientId }, { session: buffer }, { upsert: true });
 
             console.log('\n' + '='*60);
             console.log('🌟 SUCCESS: YOUR FRESH SESSION IS NOW IN MONGODB!');

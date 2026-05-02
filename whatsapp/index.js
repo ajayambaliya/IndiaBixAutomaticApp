@@ -26,10 +26,25 @@ async function start() {
         try {
             await mongoose.connect(mongoUri);
             const store = new MongoStore({ mongoose: mongoose, collection: 'whatsapp_sessions' });
+            
+            // DEBUG LOG
+            const clientId = "whatsapp-bot";
+            const SessionModel = mongoose.models.WhatsAppSession || mongoose.model('WhatsAppSession', new mongoose.Schema({
+                id: String,
+                session: Buffer
+            }, { collection: 'whatsapp_sessions' }));
+            
+            const sessionData = await SessionModel.findOne({ id: clientId });
+            if (sessionData) {
+                console.log(`🔍 DEBUG: Found session for "${clientId}" in MongoDB. Size: ${(sessionData.session.length/1024).toFixed(2)} KB`);
+            } else {
+                console.log(`🔍 DEBUG: No session found for "${clientId}" in MongoDB!`);
+            }
+
             authStrategy = new RemoteAuth({
                 store: store,
                 backupSyncIntervalMs: 600000,
-                clientId: "whatsapp-bot",
+                clientId: clientId,
                 dataPath: './.wwebjs_auth'
             });
         } catch (err) {
