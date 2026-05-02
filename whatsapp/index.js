@@ -111,8 +111,30 @@ async function start() {
         if (isBroadcasting) return;
         isBroadcasting = true;
 
-        console.log('Bot is ready! Waiting 10 seconds for stability...');
-        await new Promise(resolve => setTimeout(resolve, 10000));
+        console.log('Bot is ready! Starting Resilient Broadcast Engine...');
+        
+        let attempts = 0;
+        const maxAttempts = 5;
+        let chats = null;
+
+        while (attempts < maxAttempts) {
+            try {
+                attempts++;
+                console.log(`📡 stability Check (Attempt ${attempts}/${maxAttempts})...`);
+                await new Promise(resolve => setTimeout(resolve, 15000)); // Wait 15s for WhatsApp to settle
+
+                chats = await client.getChats();
+                if (chats && chats.length > 0) break; 
+            } catch (err) {
+                console.error(`⚠️ Stability check failed: ${err.message}. Retrying in 10s...`);
+                await new Promise(resolve => setTimeout(resolve, 10000));
+            }
+        }
+
+        if (!chats) {
+            console.error('❌ Failed to stabilize WhatsApp after multiple attempts. Exiting.');
+            process.exit(1);
+        }
 
         // PREMIUM DYNAMIC CAPTION
         const dateStr = path.basename(PDF_PATH).match(/\d{4}-\d{2}-\d{2}/)?.[0] || new Date().toISOString().split('T')[0];
@@ -127,49 +149,33 @@ async function start() {
             `✨ _Curated with ❤️ by Ajay Ambaliya_ ✨`;
 
         const media = MessageMedia.fromFilePath(PDF_PATH);
-        const chats = await client.getChats();
         
-        // Get all group names to help debugging
-        const allGroups = chats.filter(c => c.isGroup).map(c => c.name);
-        console.log('Found these groups in your WhatsApp:', allGroups.join(', '));
-
+        // Filter groups
         const targetGroups = chats.filter(chat => 
             chat.isGroup && 
             GROUP_NAMES.map(gn => gn.trim()).includes(chat.name.trim())
         );
 
-        console.log(`Found ${targetGroups.length} matching groups. Starting broadcast with safety delays...`);
-
-        // Helper function for delays
-        const sleep = (ms) => new Promise(resolve => setTimeout(resolve, ms));
+        console.log(`✅ Found ${targetGroups.length} matching groups. Starting broadcast...`);
 
         for (let i = 0; i < targetGroups.length; i++) {
             const group = targetGroups[i];
             try {
                 console.log(`[${i + 1}/${targetGroups.length}] Sending PDF to: ${group.name}...`);
                 await client.sendMessage(group.id._serialized, media, { caption: CUSTOM_CAPTION });
-                console.log(`✅ Sent to ${group.name}`);
-
-                // Random delay between 5 to 12 seconds to mimic human behavior
-                if (i < targetGroups.length - 1) {
-                    const delay = Math.floor(Math.random() * (12000 - 5000 + 1)) + 5000;
-                    console.log(`Sleeping for ${Math.round(delay/1000)}s to avoid ban...`);
-                    await sleep(delay);
-                }
+                console.log(`✔️ Sent to ${group.name}`);
+                await new Promise(resolve => setTimeout(resolve, Math.random() * 5000 + 5000));
             } catch (err) {
-                console.error(`❌ Failed to send PDF to ${group.name}:`, err);
+                console.error(`❌ Failed to send to ${group.name}:`, err.message);
             }
         }
 
-        console.log('All broadcast tasks completed successfully!');
-
-        console.log('Waiting for messages to be delivered...');
-        // Give it more time to ensure the media is fully uploaded and sent
+        console.log('🌟 ALL BROADCAST TASKS COMPLETED!');
         setTimeout(async () => {
-            console.log('Closing WhatsApp client...');
+            console.log('Shutting down gracefully...');
             await client.destroy();
             process.exit(0);
-        }, 15000);
+        }, 10000);
     });
 
     console.log('Starting client initialization... (This may take up to 2 minutes)');
