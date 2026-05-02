@@ -40,14 +40,12 @@ async function setup() {
     console.log('✅ MongoDB is clean.');
 
     const client = new Client({
-        authStrategy: new RemoteAuth({
-            store: store,
-            backupSyncIntervalMs: 600000,
+        authStrategy: new LocalAuth({
             clientId: clientId,
             dataPath: './.wwebjs_auth' 
         }),
         puppeteer: {
-            headless: true, // MUST BE TRUE TO MATCH GITHUB
+            headless: true, // Headless to match GitHub environment
             args: [
                 '--no-sandbox',
                 '--disable-setuid-sandbox',
@@ -112,7 +110,7 @@ async function setup() {
         console.log('🚀 STAGE 3: Cleaning and Syncing to MongoDB...');
 
         try {
-            const sessionDir = path.join(__dirname, `.wwebjs_auth/RemoteAuth-${clientId}`);
+            const sessionDir = path.join(__dirname, `.wwebjs_auth/session-${clientId}`);
 
             // 1. CLEAN JUNK
             console.log('  🧹 Cleaning browser cache...');

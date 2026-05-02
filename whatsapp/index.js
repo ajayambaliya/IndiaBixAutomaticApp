@@ -18,46 +18,48 @@ if (!fs.existsSync(PDF_PATH)) {
 }
 
 async function start() {
-    let authStrategy;
+    const clientId = "whatsapp-bot";
+    const sessionDir = path.join(__dirname, `.wwebjs_auth/session-${clientId}`);
     const mongoUri = process.env.MONGO_DB_URI;
-    
+
     if (mongoUri) {
-        console.log('Using MongoDB for session storage (database: indiabixauto)...');
+        console.log('Using MongoDB for manual session retrieval...');
         try {
             await mongoose.connect(mongoUri);
-            const store = new MongoStore({ mongoose: mongoose, collection: 'whatsapp_sessions' });
-            
-            // DEBUG LOG
-            const clientId = "whatsapp-bot";
             const SessionModel = mongoose.models.WhatsAppSession || mongoose.model('WhatsAppSession', new mongoose.Schema({
                 id: String,
                 session: Buffer
             }, { collection: 'whatsapp_sessions' }));
-            
+
             const sessionData = await SessionModel.findOne({ id: clientId });
             if (sessionData) {
-                console.log(`🔍 DEBUG: Found session for "${clientId}" in MongoDB. Size: ${(sessionData.session.length/1024).toFixed(2)} KB`);
-            } else {
-                console.log(`🔍 DEBUG: No session found for "${clientId}" in MongoDB!`);
-            }
+                console.log(`🔍 Found session in MongoDB (${(sessionData.session.length/1024).toFixed(2)} KB). Extracting...`);
+                
+                // Ensure local dir is clean
+                if (fs.existsSync(sessionDir)) fs.rmSync(sessionDir, { recursive: true, force: true });
+                fs.mkdirSync(sessionDir, { recursive: true });
 
-            authStrategy = new RemoteAuth({
-                store: store,
-                backupSyncIntervalMs: 600000,
-                clientId: clientId,
-                dataPath: './.wwebjs_auth'
-            });
+                // Unzip manually
+                const unzipper = require('unzipper');
+                const stream = require('stream');
+                const bufferStream = new stream.PassThrough();
+                bufferStream.end(sessionData.session);
+                
+                await bufferStream.pipe(unzipper.Extract({ path: sessionDir })).promise();
+                console.log('✅ Session extracted successfully.');
+            } else {
+                console.log('⚠️ No session found in MongoDB.');
+            }
         } catch (err) {
-            console.error('Failed to connect to MongoDB, falling back to LocalAuth:', err);
-            authStrategy = new LocalAuth({ clientId: "whatsapp-bot" });
+            console.error('❌ Failed manual session retrieval:', err);
         }
-    } else {
-        console.log('No MONGO_DB_URI found, using LocalAuth...');
-        authStrategy = new LocalAuth({ clientId: "whatsapp-bot" });
     }
 
     const client = new Client({
-        authStrategy: authStrategy,
+        authStrategy: new LocalAuth({
+            clientId: clientId,
+            dataPath: './.wwebjs_auth'
+        }),
         puppeteer: {
             headless: true,
             args: [
