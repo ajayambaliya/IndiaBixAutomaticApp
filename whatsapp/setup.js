@@ -1,31 +1,63 @@
-const { Client, LocalAuth } = require('whatsapp-web.js');
-const qrcode = require('qrcode-terminal');
-const fs = require('fs');
+const { Client, RemoteAuth, LocalAuth } = require('whatsapp-web.js');
+const { MongoStore } = require('wwebjs-mongo');
+const mongoose = require('mongoose');
 const path = require('path');
+require('dotenv').config({ path: path.join(__dirname, '../.env') });
+require('dotenv').config();
 
-// This script is to be run LOCALLY once to generate your session.
-const client = new Client({
-    authStrategy: new LocalAuth({
-        clientId: "whatsapp-bot"
-    }),
-    puppeteer: {
-        headless: true,
-        args: ['--no-sandbox']
+async function setup() {
+    const mongoUri = process.env.MONGO_DB_URI;
+    if (!mongoUri) {
+        console.error('❌ Error: MONGO_DB_URI not found in .env file.');
+        process.exit(1);
     }
-});
 
-client.on('qr', (qr) => {
-    console.log('SCAN THIS QR CODE WITH YOUR WHATSAPP:');
-    qrcode.generate(qr, { small: true });
-});
+    console.log('Connecting to MongoDB...');
+    await mongoose.connect(mongoUri);
+    const store = new MongoStore({ mongoose: mongoose });
 
-client.on('ready', () => {
-    console.log('Client is ready!');
-    console.log('SUCCESS: Your session is saved in the ".wwebjs_auth" folder.');
-    console.log('Follow these steps now:');
-    console.log('1. Close this script (Ctrl+C).');
-    console.log('2. You will see a folder named ".wwebjs_auth".');
-    console.log('3. I will provide a command to zip and encode this folder for GitHub Secrets.');
-});
+    const client = new Client({
+        authStrategy: new RemoteAuth({
+            store: store,
+            backupSyncIntervalMs: 300000,
+            clientId: "whatsapp-bot"
+        }),
+        puppeteer: {
+            headless: false, // Show browser for setup
+            args: ['--no-sandbox']
+        }
+    });
 
-client.initialize();
+    client.on('qr', (qr) => {
+        console.log('QR RECEIVED. Scan this with your WhatsApp:');
+        const qrcode = require('qrcode-terminal');
+        qrcode.generate(qr, { small: true });
+    });
+
+    client.on('authenticated', () => {
+        console.log('✅ AUTHENTICATED');
+    });
+
+    client.on('remote_session_saved', () => {
+        console.log('✅ REMOTE SESSION SAVED TO MONGODB');
+        console.log('You can now close this and the CI/CD will use the session from MongoDB.');
+        setTimeout(() => process.exit(0), 5000);
+    });
+
+    client.on('auth_failure', (msg) => {
+        console.error('❌ AUTHENTICATION FAILURE:', msg);
+        process.exit(1);
+    });
+
+    client.on('ready', () => {
+        console.log('✅ WhatsApp is ready!');
+    });
+
+    console.log('Starting client initialization...');
+    client.initialize();
+}
+
+setup().catch(err => {
+    console.error('Setup error:', err);
+    process.exit(1);
+});

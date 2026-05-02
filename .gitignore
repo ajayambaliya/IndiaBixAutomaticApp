@@ -142,6 +142,13 @@ src/static/images/qr-*.png
 current_affairs.log
 pdf_generator.log 
 
+# WhatsApp Automation
+whatsapp/.wwebjs_auth/
+whatsapp/node_modules/
+node_modules/
+session.zip
+whatsapp/document.pdf
+
 # Persistent storage
 .translation_cache.json
 .gemini_usage.json

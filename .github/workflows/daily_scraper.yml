@@ -36,19 +36,6 @@ jobs:
         working-directory: ./whatsapp
         run: npm install
 
-      - name: Restore WhatsApp Session
-        env:
-          WWEBJS_SESSION: ${{ secrets.WWEBJS_SESSION }}
-        run: |
-          if [ -n "$WWEBJS_SESSION" ]; then
-            echo "Decoding WhatsApp session..."
-            echo "$WWEBJS_SESSION" | base64 -d > session.zip
-            unzip -o session.zip -d ./whatsapp/
-            rm session.zip
-          else
-            echo "No WWEBJS_SESSION secret found. Bot will require QR scan (will likely fail in CI)."
-          fi
-
       - name: Create .env file
         run: |
           echo "MONGO_DB_URI=${{ secrets.MONGO_DB_URI }}" > .env
@@ -65,11 +52,11 @@ jobs:
 
       - name: Run Scraper and Broadcast
         env:
-          MONGO_DB_URI: ${{ secrets.MONGO_DB_URI }}
+          GEMINI_API_KEY: ${{ secrets.GEMINI_API_KEY }}
           TELEGRAM_BOT_TOKEN: ${{ secrets.TELEGRAM_BOT_TOKEN }}
+          MONGO_DB_URI: ${{ secrets.MONGO_DB_URI }}
           ENGLISH_CHANNEL: ${{ secrets.ENGLISH_CHANNEL }}
           GUJARATI_CHANNEL: ${{ secrets.GUJARATI_CHANNEL }}
-          GEMINI_API_KEY: ${{ secrets.GEMINI_API_KEY }}
           WHATSAPP_GROUPS: ${{ secrets.WHATSAPP_GROUPS }}
         run: |
           python main.py --languages en gu --send-telegram --send-whatsapp --github-actions
