@@ -7,8 +7,9 @@ on:
   workflow_dispatch:  # Allow manual trigger from the Actions tab
 
 jobs:
-  scrape-and-generate:
+  run_scraper:
     runs-on: ubuntu-22.04
+    timeout-minutes: 10
     
     steps:
       - name: Checkout repository

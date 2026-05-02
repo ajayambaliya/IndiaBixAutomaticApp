@@ -60,7 +60,13 @@ async function start() {
     });
 
     client.on('qr', (qr) => {
-        console.log('QR RECEIVED. It seems your session expired. Scan again:');
+        if (process.env.GITHUB_ACTIONS || process.argv.includes('--github-actions')) {
+            console.error('❌ SESSION EXPIRED: WhatsApp session is no longer valid.');
+            console.error('👉 ACTION REQUIRED: Run "node whatsapp/setup.js" on your computer to re-pair.');
+            process.exit(1); // Fail the build to stop wasting minutes
+        }
+        
+        console.log('QR RECEIVED. Scan again:');
         const qrcode = require('qrcode-terminal');
         qrcode.generate(qr, { small: true });
     });
