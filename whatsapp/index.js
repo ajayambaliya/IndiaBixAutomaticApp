@@ -19,8 +19,7 @@ if (!fs.existsSync(PDF_PATH)) {
 
 async function start() {
     let authStrategy;
-    // Priority order for MongoDB URI: 1. Hardcoded, 2. Environment Variable
-    const mongoUri = "mongodb+srv://dalal:Hjeh3T3ZibiN8IiX@cluster0.cqll1b7.mongodb.net/indiabixauto?retryWrites=true&w=majority";
+    const mongoUri = process.env.MONGO_DB_URI;
     
     if (mongoUri) {
         console.log('Using MongoDB for session storage (database: indiabixauto)...');

@@ -5,8 +5,8 @@ const path = require('path');
 require('dotenv').config({ path: path.join(__dirname, '../.env') });
 require('dotenv').config();
 
-async function start() {
-    const mongoUri = "mongodb+srv://dalal:Hjeh3T3ZibiN8IiX@cluster0.cqll1b7.mongodb.net/indiabixauto?retryWrites=true&w=majority";
+async function setup() {
+    const mongoUri = process.env.MONGO_DB_URI;
     
     if (!mongoUri) {
         console.error('❌ MONGO_DB_URI missing');
