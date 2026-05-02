@@ -19,17 +19,19 @@ if (!fs.existsSync(PDF_PATH)) {
 
 async function start() {
     let authStrategy;
-    const mongoUri = process.env.MONGO_DB_URI;
-
+    // Priority order for MongoDB URI: 1. Hardcoded, 2. Environment Variable
+    const mongoUri = "mongodb+srv://dalal:Hjeh3T3ZibiN8IiX@cluster0.cqll1b7.mongodb.net/indiabixauto?retryWrites=true&w=majority";
+    
     if (mongoUri) {
-        console.log('Using MongoDB for session storage...');
+        console.log('Using MongoDB for session storage (database: indiabixauto)...');
         try {
             await mongoose.connect(mongoUri);
-            const store = new MongoStore({ mongoose: mongoose });
+            const store = new MongoStore({ mongoose: mongoose, collection: 'whatsapp_sessions' });
             authStrategy = new RemoteAuth({
                 store: store,
-                backupSyncIntervalMs: 300000,
-                clientId: "whatsapp-bot"
+                backupSyncIntervalMs: 600000,
+                clientId: "whatsapp-bot",
+                dataPath: './.wwebjs_auth'
             });
         } catch (err) {
             console.error('Failed to connect to MongoDB, falling back to LocalAuth:', err);

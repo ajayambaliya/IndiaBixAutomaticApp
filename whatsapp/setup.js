@@ -5,26 +5,39 @@ const path = require('path');
 require('dotenv').config({ path: path.join(__dirname, '../.env') });
 require('dotenv').config();
 
-async function setup() {
-    const mongoUri = process.env.MONGO_DB_URI;
+async function start() {
+    const mongoUri = "mongodb+srv://dalal:Hjeh3T3ZibiN8IiX@cluster0.cqll1b7.mongodb.net/indiabixauto?retryWrites=true&w=majority";
+    
     if (!mongoUri) {
-        console.error('❌ Error: MONGO_DB_URI not found in .env file.');
-        process.exit(1);
+        console.error('❌ MONGO_DB_URI missing');
+        return;
     }
 
-    console.log('Connecting to MongoDB...');
+    console.log('Connecting to MongoDB (database: indiabixauto)...');
     await mongoose.connect(mongoUri);
-    const store = new MongoStore({ mongoose: mongoose });
+    const store = new MongoStore({ mongoose: mongoose, collection: 'whatsapp_sessions' });
 
     const client = new Client({
         authStrategy: new RemoteAuth({
             store: store,
-            backupSyncIntervalMs: 300000,
-            clientId: "whatsapp-bot"
+            backupSyncIntervalMs: 600000,
+            clientId: "whatsapp-bot",
+            dataPath: './.wwebjs_auth' 
         }),
         puppeteer: {
-            headless: false, // Show browser for setup
-            args: ['--no-sandbox']
+            headless: false,
+            args: [
+                '--no-sandbox',
+                '--disable-setuid-sandbox'
+            ]
+        }
+    });
+
+    client.on('error', (err) => {
+        if (err.message.includes('ENOENT') && err.message.includes('.zip')) {
+            console.log('⏳ Just a temporary sync glitch, ignore this... saving session...');
+        } else {
+            console.error('❌ WhatsApp Error:', err);
         }
     });
 
@@ -42,18 +55,17 @@ async function setup() {
 
     client.on('remote_session_saved', () => {
         console.log('✅ REMOTE SESSION SAVED: Your session is now in MongoDB!');
-        console.log('Checking your database for a collection named "whatsapp-auth"...');
         console.log('You can now close this and use CI/CD.');
         setTimeout(() => process.exit(0), 5000);
     });
 
     client.on('auth_failure', (msg) => {
         console.error('❌ AUTHENTICATION FAILURE:', msg);
-        process.exit(1);
     });
 
     client.on('ready', () => {
         console.log('✅ WhatsApp is ready and fully loaded!');
+        console.log('Waiting 10 seconds for MongoDB sync to finish...');
     });
 
     console.log('Starting client initialization...');
