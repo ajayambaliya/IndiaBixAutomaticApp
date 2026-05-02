@@ -171,11 +171,20 @@ async function start() {
         }
 
         console.log('🌟 ALL BROADCAST TASKS COMPLETED!');
+        console.log('⏳ Waiting 90 seconds for all PDFs to be fully delivered...');
+        
+        let secondsLeft = 90;
+        const countdown = setInterval(() => {
+            secondsLeft -= 10;
+            if (secondsLeft > 0) console.log(`... ${secondsLeft}s remaining`);
+            if (secondsLeft <= 0) clearInterval(countdown);
+        }, 10000);
+
         setTimeout(async () => {
-            console.log('Shutting down gracefully...');
+            console.log('🏁 Delivery window closed. Shutting down gracefully...');
             await client.destroy();
             process.exit(0);
-        }, 10000);
+        }, 90000);
     });
 
     console.log('Starting client initialization... (This may take up to 2 minutes)');
