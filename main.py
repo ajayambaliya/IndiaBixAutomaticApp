@@ -11,6 +11,7 @@ from datetime import datetime, timedelta
 from pathlib import Path
 from typing import Dict, Any, List, Optional, Tuple
 import sys
+import re
 import dotenv
 
 # Load environment variables from .env file
