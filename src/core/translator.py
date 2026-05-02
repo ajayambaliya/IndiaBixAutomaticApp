@@ -165,9 +165,20 @@ class GeminiTranslator:
         return response.text
 
     def _sanitize_json(self, text: str) -> str:
-        """Strips markdown fences and attempts to fix common LLM JSON errors."""
-        text = re.sub(r'```json\s*', '', text)
+        """Strips markdown fences and extracts JSON content even if conversational text is present."""
+        # 1. Strip markdown code block markers
+        text = re.sub(r'```(?:json)?\s*', '', text, flags=re.IGNORECASE)
         text = re.sub(r'```\s*', '', text)
+        
+        # 2. Extract content between first { and last }
+        try:
+            start_idx = text.find('{')
+            end_idx = text.rfind('}')
+            if start_idx != -1 and end_idx != -1:
+                text = text[start_idx:end_idx + 1]
+        except Exception:
+            pass
+            
         return text.strip()
 
     async def translate_batch(self, content_dict: Dict[str, str], target_lang: str = "gu") -> Dict[str, str]:
