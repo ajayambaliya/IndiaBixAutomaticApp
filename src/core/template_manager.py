@@ -6,8 +6,8 @@ import logging
 from pathlib import Path
 from typing import Dict, Any, List, Optional
 
-from src.core.translator import translate_content as mistral_translate_questions_list
-from src.core.translator import translate_with_mistral_api as mistral_translate_single_text
+from src.core.translator import translate_content as gemini_translate_questions_list
+from src.core.translator import translate_with_gemini_api as gemini_translate_single_text
 
 logger = logging.getLogger(__name__)
 
@@ -119,7 +119,7 @@ class TemplateManager:
     
     async def _translate_content_async(self, categorized_questions: Dict[str, List[Dict[str, Any]]], 
                                  target_language: str) -> Dict[str, List[Dict[str, Any]]]:
-        """Asynchronously translate question content and categories to target language using Mistral AI."""
+        """Asynchronously translate question content and categories to target language using Gemini AI."""
         if not categorized_questions:
             return {}
 
@@ -138,8 +138,8 @@ class TemplateManager:
                 original_category_map[temp_id] = (category, q_idx) # Store original category and index
 
         # Translate all questions in one batch
-        logger.info(f"Starting batch translation of {len(all_questions_flat)} questions to {target_language} using Mistral.")
-        translated_questions_flat = await mistral_translate_questions_list(
+        logger.info(f"Starting batch translation of {len(all_questions_flat)} questions to {target_language} using Gemini.")
+        translated_questions_flat = await gemini_translate_questions_list(
             all_questions_flat, 
             source_lang="en", 
             target_lang=target_language
@@ -180,10 +180,9 @@ class TemplateManager:
             translated_category_name = original_category_name
             if original_category_name not in processed_categories and original_category_name.lower() != "general": # Avoid translating "general" or re-translating
                 logger.info(f"Translating category name: {original_category_name} to {target_language}")
-                translated_cat_name_api_result = await mistral_translate_single_text(
+                translated_cat_name_api_result = await gemini_translate_single_text(
                     original_category_name, 
-                    target_lang=target_language, 
-                    source_lang="en"
+                    target_lang=target_language
                 )
                 if translated_cat_name_api_result:
                     translated_category_name = translated_cat_name_api_result

@@ -8,7 +8,7 @@ import re
 from datetime import datetime
 from typing import List, Optional, Dict, Any
 from pathlib import Path
-import PyPDF2
+import pypdf
 
 from telegram import Bot
 from telegram.constants import ParseMode
@@ -136,7 +136,7 @@ class TelegramPDFBot:
             # Try to extract from PDF content
             try:
                 with open(pdf_path, 'rb') as file:
-                    reader = PyPDF2.PdfReader(file)
+                    reader = pypdf.PdfReader(file)
                     text = ""
                     # Get text from first few pages
                     for i in range(min(3, len(reader.pages))):

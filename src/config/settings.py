@@ -76,6 +76,9 @@ TELEGRAM_BOT_TOKEN = os.getenv("TELEGRAM_BOT_TOKEN")
 ENGLISH_CHANNEL = os.getenv("ENGLISH_CHANNEL", DEFAULT_ENGLISH_CHANNEL)
 GUJARATI_CHANNEL = os.getenv("GUJARATI_CHANNEL", DEFAULT_GUJARATI_CHANNEL)
 
+# WhatsApp configuration
+WHATSAPP_GROUPS = [g.strip() for g in os.getenv("WHATSAPP_GROUPS", "").split(",")] if os.getenv("WHATSAPP_GROUPS") else []
+
 # Author information
 AUTHOR = {
     "name": "Ajay Ambaliya",
@@ -114,6 +117,7 @@ CONFIG = {
     "telegram_bot_token": TELEGRAM_BOT_TOKEN,
     "english_channel": ENGLISH_CHANNEL,
     "gujarati_channel": GUJARATI_CHANNEL,
+    "whatsapp_groups": WHATSAPP_GROUPS,
     "author": AUTHOR,
     "translation_enabled": TRANSLATION_ENABLED
-} 
+}

@@ -1,415 +1,481 @@
-<div class="promotion-page">
-    <div class="promotion-header">
-        {% if language == 'en' %}
-        <h2 class="promotion-title">Stay Updated with Current Affairs</h2>
-        <p class="promotion-subtitle">Join our Telegram channel for daily updates and quizzes</p>
-        {% else %}
-        <h2 class="promotion-title">કરંટ અફેર્સ સાથે અપડેટ રહો</h2>
-        <p class="promotion-subtitle">દૈનિક અપડેટ્સ અને ક્વિઝ માટે અમારી ટેલિગ્રામ ચેનલમાં જોડાઓ</p>
-        {% endif %}
-    </div>
-    
-    <div class="channel-card-container">
-        <div class="channel-card">
-            <div class="channel-icon">{% if language == 'en' %}🇬🇧{% else %}🇮🇳{% endif %}</div>
-            <h3 class="channel-name">
-                {% if language == 'en' %}Daily Current Affairs{% else %}Current Adda{% endif %}
-            </h3>
-            <p class="channel-handle">
-                {% if language == 'en' %}{{ config.branding.channels.english }}{% else %}{{ config.branding.channels.gujarati }}{% endif %}
-            </p>
-            <div class="channel-stats">
-                <div class="stat">
-                    <span class="stat-value">{% if language == 'en' %}Daily{% else %}દૈનિક{% endif %}</span>
-                    <span class="stat-label">{% if language == 'en' %}Updates{% else %}અપડેટ્સ{% endif %}</span>
-                </div>
-                <div class="stat">
-                    <span class="stat-value">{% if language == 'en' %}Free{% else %}મફત{% endif %}</span>
-                    <span class="stat-label">{% if language == 'en' %}Access{% else %}એક્સેસ{% endif %}</span>
-                </div>
-                <div class="stat">
-                    <span class="stat-value">{% if language == 'en' %}Quality{% else %}ગુણવત્તા{% endif %}</span>
-                    <span class="stat-label">{% if language == 'en' %}Content{% else %}સામગ્રી{% endif %}</span>
-                </div>
-            </div>
-            <div class="channel-qr">
-                <!-- QR code will be generated dynamically -->
-                {% if language == 'en' %}
-                <img src="{{ english_qr|default('qr-english.png') }}" alt="English Channel QR Code">
-                {% else %}
-                <img src="{{ gujarati_qr|default('qr-gujarati.png') }}" alt="Gujarati Channel QR Code">
-                {% endif %}
-            </div>
-            <div class="channel-cta">
-                {% if language == 'en' %}
-                Scan to join our English Channel
-                {% else %}
-                ગુજરાતી ચેનલમાં જોડાવા માટે સ્કેન કરો
-                {% endif %}
-            </div>
-        </div>
-    </div>
-    
-    <div class="benefits-section">
-        <h3 class="benefits-title">
-            {% if language == 'en' %}Why Join Our Channel?{% else %}અમારી ચેનલમાં શા માટે જોડાવું?{% endif %}
-        </h3>
-        <div class="benefits-grid">
-            <div class="benefit-item">
-                <div class="benefit-icon">📚</div>
-                <div class="benefit-content">
-                    <h4>{% if language == 'en' %}Daily Updates{% else %}દૈનિક અપડેટ્સ{% endif %}</h4>
-                    <p>{% if language == 'en' %}Get the latest current affairs updates every day{% else %}દરરોજ નવીનતમ કરંટ અફેર્સ અપડેટ્સ મેળવો{% endif %}</p>
-                </div>
-            </div>
-            <div class="benefit-item">
-                <div class="benefit-icon">🧠</div>
-                <div class="benefit-content">
-                    <h4>{% if language == 'en' %}Interactive Quizzes{% else %}ઇન્ટરેક્ટિવ ક્વિઝ{% endif %}</h4>
-                    <p>{% if language == 'en' %}Test your knowledge with our daily quizzes{% else %}અમારી દૈનિક ક્વિઝ સાથે તમારા જ્ઞાનની ચકાસણી કરો{% endif %}</p>
-                </div>
-            </div>
-            <div class="benefit-item">
-                <div class="benefit-icon">🏆</div>
-                <div class="benefit-content">
-                    <h4>{% if language == 'en' %}Exam Preparation{% else %}પરીક્ષાની તૈયારી{% endif %}</h4>
-                    <p>{% if language == 'en' %}Perfect for competitive exam preparation{% else %}સ્પર્ધાત્મક પરીક્ષાની તૈયારી માટે સંપૂર્ણ{% endif %}</p>
-                </div>
-            </div>
-            <div class="benefit-item">
-                <div class="benefit-icon">🔔</div>
-                <div class="benefit-content">
-                    <h4>{% if language == 'en' %}Instant Notifications{% else %}તાત્કાલિક સૂચનાઓ{% endif %}</h4>
-                    <p>{% if language == 'en' %}Never miss important updates and news{% else %}મહત્વપૂર્ણ અપડેટ્સ અને સમાચાર ક્યારેય ચૂકશો નહીં{% endif %}</p>
-                </div>
-            </div>
-        </div>
-    </div>
-    
-    <div class="testimonials-section">
-        <h3 class="testimonials-title">
-            {% if language == 'en' %}What Our Members Say{% else %}અમારા સભ્યો શું કહે છે{% endif %}
-        </h3>
-        <div class="testimonials-grid">
-            <div class="testimonial-item">
-                <div class="testimonial-quote">
-                    {% if language == 'en' %}
-                    "The daily quizzes have helped me tremendously in my UPSC preparation. Highly recommended!"
-                    {% else %}
-                    "દૈનિક ક્વિઝથી મને UPSC તૈયારીમાં ઘણી મદદ મળી છે. ખૂબ ભલામણ કરું છું!"
-                    {% endif %}
-                </div>
-                <div class="testimonial-author">
-                    {% if language == 'en' %}- Rahul S., UPSC Aspirant{% else %}- રાહુલ એસ., UPSC આકાંક્ષી{% endif %}
-                </div>
-            </div>
-            <div class="testimonial-item">
-                <div class="testimonial-quote">
-                    {% if language == 'en' %}
-                    "I love the concise format and detailed explanations. It's my go-to resource for current affairs."
-                    {% else %}
-                    "મને સંક્ષિપ્ત ફોર્મેટ અને વિગતવાર સમજૂતીઓ ગમે છે. તે કરંટ અફેર્સ માટે મારો મુખ્ય સ્રોત છે."
-                    {% endif %}
-                </div>
-                <div class="testimonial-author">
-                    {% if language == 'en' %}- Priya M., Bank PO Candidate{% else %}- પ્રિયા એમ., બેંક PO ઉમેદવાર{% endif %}
-                </div>
-            </div>
-        </div>
-    </div>
-    
-    <div class="author-section">
-        <div class="author-info">
-            <h3>{% if language == 'en' %}About the Author{% else %}લેખક વિશે{% endif %}</h3>
-            <p>
-                {% if language == 'en' %}
-                This Current Affairs PDF is curated by <strong>{{ config.author.name }}</strong>, {{ config.author.title }}.
-                {% else %}
-                આ કરંટ અફેર્સ PDF <strong>{{ config.author.name }}</strong>, {{ config.author.title }} દ્વારા ક્યુરેટ કરવામાં આવ્યું છે.
-                {% endif %}
-            </p>
-            <p>
-                {% if language == 'en' %}
-                Join thousands of students who trust us for their daily current affairs needs.
-                {% else %}
-                હજારો વિદ્યાર્થીઓની સાથે જોડાઓ જેઓ તેમની દૈનિક કરંટ અફેર્સની જરૂરિયાતો માટે અમારા પર વિશ્વાસ કરે છે.
-                {% endif %}
-            </p>
-        </div>
-    </div>
-    
-    <div class="join-cta">
-        <a href="{% if language == 'en' %}{{ config.branding.join_link.english }}{% else %}{{ config.branding.join_link.gujarati }}{% endif %}" class="join-button">
-            {% if language == 'en' %}Join Now{% else %}અત્યારે જોડાઓ{% endif %}
-        </a>
-        <p class="join-text">
-            {% if language == 'en' %}
-            or visit <span class="join-url">{{ config.branding.join_link.english }}</span>
-            {% else %}
-            અથવા મુલાકાત લો <span class="join-url">{{ config.branding.join_link.gujarati }}</span>
-            {% endif %}
-        </p>
-    </div>
-</div>
-
 <style>
-    .promotion-page {
-        padding: var(--space-8);
+    @import url('https://fonts.googleapis.com/css2?family=Noto+Serif+Gujarati:wght@400;500;600;700;900&display=swap');
+
+    * {
+        margin: 0;
+        padding: 0;
+        box-sizing: border-box;
+    }
+
+    .promo-wrap {
+        font-family: 'Noto Serif Gujarati', serif;
+        background: #0a0a0f;
+        color: #f0ece4;
+        min-height: 100vh;
+        padding: 0;
+        overflow: hidden;
+        position: relative;
+    }
+
+    .bg-grid {
+        position: absolute;
+        inset: 0;
+        background-image:
+            linear-gradient(rgba(255, 200, 80, 0.04) 1px, transparent 1px),
+            linear-gradient(90deg, rgba(255, 200, 80, 0.04) 1px, transparent 1px);
+        background-size: 48px 48px;
+        pointer-events: none;
+    }
+
+    .bg-glow {
+        position: absolute;
+        top: -120px;
+        left: 50%;
+        transform: translateX(-50%);
+        width: 600px;
+        height: 400px;
+        background: radial-gradient(ellipse, rgba(234, 179, 8, 0.12) 0%, transparent 70%);
+        pointer-events: none;
+    }
+
+    .inner {
+        position: relative;
+        z-index: 1;
+        max-width: 680px;
+        margin: 0 auto;
+        padding: 15px 28px 10px; /* Aggressively reduced from 30px/20px */
+    }
+
+    /* Header */
+    .header-eyebrow {
         display: flex;
-        flex-direction: column;
-        gap: var(--space-8);
+        align-items: center;
+        gap: 10px;
+        margin-bottom: 20px;
+        justify-content: center;
     }
-    
-    .promotion-header {
-        text-align: center;
-        margin-bottom: var(--space-6);
+
+    .eyebrow-line {
+        width: 32px;
+        height: 1px;
+        background: rgba(234, 179, 8, 0.5);
     }
-    
-    .promotion-title {
-        font-size: var(--text-4xl);
+
+    .eyebrow-text {
+        font-size: 11px;
+        letter-spacing: 0.18em;
+        color: #eab308;
+        text-transform: uppercase;
+        font-weight: 500;
+    }
+
+    .main-title {
+        font-size: 28px; /* Further reduced from 32px */
         font-weight: 700;
-        color: var(--gray-900);
-        margin-bottom: var(--space-2);
-        background: var(--gradient-primary);
-        -webkit-background-clip: text;
-        -webkit-text-fill-color: transparent;
-        display: inline-block;
+        line-height: 1.1;
+        text-align: center;
+        color: #faf7f0;
+        margin-bottom: 4px; /* Reduced from 8px */
+        letter-spacing: -0.01em;
     }
-    
-    .promotion-subtitle {
-        font-size: var(--text-xl);
-        color: var(--gray-600);
+
+    .main-sub {
+        font-size: 13px; /* Reduced from 14px */
+        color: rgba(240, 236, 228, 0.5);
+        text-align: center;
+        margin-bottom: 20px; /* Reduced from 30px */
+        font-weight: 400;
     }
-    
-    .channel-card-container {
+
+    /* Browser Card */
+    .browser-card {
+        background: #13131a;
+        border: 1px solid rgba(255, 255, 255, 0.1);
+        border-radius: 16px;
+        overflow: hidden;
+        margin-bottom: 20px;
+        position: relative;
+    }
+
+    .browser-bar {
+        background: #1c1c26;
+        padding: 12px 16px;
+        display: flex;
+        align-items: center;
+        gap: 8px;
+        border-bottom: 1px solid rgba(255, 255, 255, 0.07);
+    }
+
+    .dot {
+        width: 9px;
+        height: 9px;
+        border-radius: 50%;
+    }
+
+    .d-r {
+        background: #ff5f57;
+    }
+
+    .d-y {
+        background: #ffbd2e;
+    }
+
+    .d-g {
+        background: #28c840;
+    }
+
+    .addr {
+        flex: 1;
+        margin-left: 10px;
+        background: rgba(255, 255, 255, 0.05);
+        border: 1px solid rgba(255, 255, 255, 0.08);
+        border-radius: 6px;
+        padding: 5px 14px;
+        font-size: 11px;
+        color: rgba(240, 236, 228, 0.4);
+        text-align: center;
+        font-family: monospace;
+        letter-spacing: 0.02em;
+    }
+
+    .browser-hero {
+        padding: 20px 24px 16px; /* Further reduced from 30px/24px */
+        text-align: center;
+        position: relative;
+    }
+
+    .brand-badge {
+        display: inline-flex;
+        align-items: center;
+        gap: 8px;
+        background: rgba(234, 179, 8, 0.1);
+        border: 1px solid rgba(234, 179, 8, 0.25);
+        border-radius: 50px;
+        padding: 3px 12px; /* Reduced */
+        margin-bottom: 10px; /* Reduced from 14px */
+    }
+
+    .brand-dot {
+        width: 7px;
+        height: 7px;
+        border-radius: 50%;
+        background: #eab308;
+        animation: pulse 2s infinite;
+    }
+
+    @keyframes pulse {
+
+        0%,
+        100% {
+            opacity: 1;
+        }
+
+        50% {
+            opacity: 0.4;
+        }
+    }
+
+    .brand-label {
+        font-size: 12px;
+        color: #eab308;
+        letter-spacing: 0.08em;
+        font-weight: 600;
+    }
+
+    .brand-title {
+        font-size: 24px; /* Further reduced from 26px */
+        font-weight: 700;
+        color: #faf7f0;
+        margin-bottom: 4px;
+        letter-spacing: -0.02em;
+    }
+
+    .brand-desc {
+        font-size: 12px; /* Reduced */
+        color: rgba(240, 236, 228, 0.45);
+        margin-bottom: 16px; /* Reduced from 20px */
+    }
+
+    .mock-btns {
         display: flex;
         justify-content: center;
-        margin-bottom: var(--space-8);
+        gap: 10px;
     }
-    
-    .channel-card {
-        background: white;
-        border-radius: 16px;
-        box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1), 0 2px 4px -1px rgba(0, 0, 0, 0.06);
-        padding: var(--space-6);
-        border: 1px solid var(--gray-200);
-        text-align: center;
-        display: flex;
-        flex-direction: column;
-        align-items: center;
-        max-width: 400px;
-        width: 100%;
-    }
-    
-    .channel-icon {
-        font-size: 2.5rem;
-        margin-bottom: var(--space-2);
-    }
-    
-    .channel-name {
-        font-size: var(--text-2xl);
+
+    .mock-btn {
+        padding: 8px 20px;
+        border-radius: 8px;
+        font-size: 12px;
         font-weight: 600;
-        margin-bottom: var(--space-1);
+        letter-spacing: 0.04em;
+        font-family: 'Noto Serif Gujarati', serif;
     }
-    
-    .channel-handle {
-        font-size: var(--text-lg);
-        color: var(--primary-blue);
-        font-weight: 500;
-        margin-bottom: var(--space-4);
+
+    .mock-btn-primary {
+        background: #eab308;
+        color: #0a0a0f;
+        border: none;
     }
-    
-    .channel-stats {
-        display: flex;
-        justify-content: space-around;
-        width: 100%;
-        margin-bottom: var(--space-4);
+
+    .mock-btn-ghost {
+        background: transparent;
+        color: rgba(240, 236, 228, 0.6);
+        border: 1px solid rgba(255, 255, 255, 0.12);
     }
-    
-    .stat {
-        display: flex;
-        flex-direction: column;
-        align-items: center;
-    }
-    
-    .stat-value {
-        font-size: var(--text-lg);
-        font-weight: 700;
-        color: var(--gray-900);
-    }
-    
-    .stat-label {
-        font-size: var(--text-xs);
-        color: var(--gray-600);
-        text-transform: uppercase;
-        letter-spacing: 0.05em;
-    }
-    
-    .channel-qr {
-        width: 150px;
-        height: 150px;
-        margin-bottom: var(--space-4);
-    }
-    
-    .channel-qr img {
-        width: 100%;
-        height: 100%;
-    }
-    
-    .channel-cta {
-        font-size: var(--text-sm);
-        color: var(--gray-600);
-        font-weight: 500;
-    }
-    
-    .benefits-section {
-        margin-bottom: var(--space-8);
-    }
-    
-    .benefits-title {
-        font-size: var(--text-2xl);
-        font-weight: 600;
+
+    /* CTA */
+    .cta-area {
         text-align: center;
-        margin-bottom: var(--space-6);
+        margin-bottom: 20px; /* Further reduced from 30px */
     }
-    
-    .benefits-grid {
-        display: grid;
-        grid-template-columns: repeat(2, 1fr);
-        gap: var(--space-4);
-    }
-    
-    .benefit-item {
-        display: flex;
-        align-items: flex-start;
-        gap: var(--space-3);
-        padding: var(--space-4);
-        background: var(--gray-50);
-        border-radius: 12px;
-    }
-    
-    .benefit-icon {
-        font-size: 1.5rem;
-    }
-    
-    .benefit-content h4 {
-        font-size: var(--text-lg);
-        font-weight: 600;
-        margin-bottom: var(--space-1);
-    }
-    
-    .benefit-content p {
-        font-size: var(--text-sm);
-        color: var(--gray-600);
-        margin: 0;
-    }
-    
-    .testimonials-section {
-        margin-bottom: var(--space-8);
-    }
-    
-    .testimonials-title {
-        font-size: var(--text-2xl);
-        font-weight: 600;
-        text-align: center;
-        margin-bottom: var(--space-6);
-    }
-    
-    .testimonials-grid {
-        display: grid;
-        grid-template-columns: repeat(2, 1fr);
-        gap: var(--space-4);
-    }
-    
-    .testimonial-item {
-        background: white;
-        border-radius: 12px;
-        padding: var(--space-4);
-        box-shadow: 0 2px 4px rgba(0, 0, 0, 0.05);
-        border: 1px solid var(--gray-200);
-    }
-    
-    .testimonial-quote {
-        font-size: var(--text-sm);
-        color: var(--gray-800);
-        font-style: italic;
-        margin-bottom: var(--space-2);
-        position: relative;
-        padding-left: var(--space-4);
-    }
-    
-    .testimonial-quote::before {
-        content: '"';
-        position: absolute;
-        left: 0;
-        top: -5px;
-        font-size: 2rem;
-        color: var(--gray-300);
-        font-family: var(--font-secondary);
-    }
-    
-    .testimonial-author {
-        font-size: var(--text-xs);
-        color: var(--gray-600);
-        text-align: right;
-        font-weight: 500;
-    }
-    
-    .author-section {
-        background: var(--gray-50);
-        border-radius: 12px;
-        padding: var(--space-6);
-        text-align: center;
-        margin-bottom: var(--space-6);
-    }
-    
-    .author-section h3 {
-        font-size: var(--text-xl);
-        margin-bottom: var(--space-2);
-        color: var(--gray-900);
-    }
-    
-    .author-section p {
-        color: var(--gray-700);
-        font-size: var(--text-base);
-        max-width: 600px;
-        margin: 0 auto var(--space-2);
-    }
-    
-    .author-section strong {
-        color: var(--primary-blue);
-    }
-    
-    .join-cta {
-        text-align: center;
-    }
-    
-    .join-button {
+
+    .cta-btn {
         display: inline-block;
-        background: var(--gradient-primary);
-        color: white;
-        font-weight: 600;
-        font-size: var(--text-lg);
-        padding: var(--space-3) var(--space-8);
-        border-radius: 9999px;
+        background: #eab308;
+        color: #0a0a0f;
+        padding: 10px 28px; /* Reduced from 12px/32px */
+        border-radius: 50px;
+        font-weight: 700;
+        font-size: 14px; /* Reduced from 15px */
         text-decoration: none;
-        margin-bottom: var(--space-3);
-        box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
-        transition: transform 0.2s ease, box-shadow 0.2s ease;
+        font-family: 'Noto Serif Gujarati', serif;
+        letter-spacing: 0.01em;
+        transition: all 0.2s;
+        margin-bottom: 12px;
+        display: inline-block;
     }
-    
-    .join-button:hover {
-        transform: translateY(-2px);
-        box-shadow: 0 6px 8px rgba(0, 0, 0, 0.15);
+
+    .cta-url {
+        font-size: 12px;
+        color: rgba(234, 179, 8, 0.5);
+        letter-spacing: 0.06em;
+        font-family: monospace;
     }
-    
-    .join-text {
-        font-size: var(--text-sm);
-        color: var(--gray-600);
-    }
-    
-    .join-url {
-        color: var(--primary-blue);
+
+    /* Section heading */
+    .section-heading {
+        font-size: 10px; /* Further reduced */
+        letter-spacing: 0.15em;
+        color: rgba(240, 236, 228, 0.35);
+        text-transform: uppercase;
+        text-align: center;
+        margin-bottom: 12px; /* Further reduced from 16px */
         font-weight: 500;
     }
-</style> 
+
+    /* Features */
+    .features-grid {
+        display: grid;
+        grid-template-columns: 1fr 1fr;
+        gap: 10px; /* Reduced from 12px */
+        margin-bottom: 20px; /* Further reduced from 30px */
+    }
+
+    .feat-card {
+        background: #13131a;
+        border: 1px solid rgba(255, 255, 255, 0.07);
+        border-radius: 14px;
+        padding: 12px 10px; /* Further reduced from 16px/14px */
+        position: relative;
+        overflow: hidden;
+        transition: border-color 0.2s;
+    }
+
+    .feat-card::before {
+        content: '';
+        position: absolute;
+        top: 0;
+        left: 0;
+        right: 0;
+        height: 2px;
+        background: linear-gradient(90deg, transparent, rgba(234, 179, 8, 0.4), transparent);
+    }
+
+    .feat-num {
+        font-size: 10px;
+        font-weight: 600;
+        letter-spacing: 0.12em;
+        color: rgba(234, 179, 8, 0.5);
+        margin-bottom: 14px;
+        font-family: monospace;
+    }
+
+    .feat-icon-wrap {
+        width: 36px;
+        height: 36px;
+        background: rgba(234, 179, 8, 0.08);
+        border: 1px solid rgba(234, 179, 8, 0.15);
+        border-radius: 10px;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        margin-bottom: 14px;
+    }
+
+    .feat-icon {
+        font-size: 16px;
+    }
+
+    .feat-title {
+        font-size: 14px;
+        font-weight: 600;
+        color: #faf7f0;
+        margin-bottom: 6px;
+        line-height: 1.3;
+    }
+
+    .feat-desc {
+        font-size: 12px;
+        color: rgba(240, 236, 228, 0.4);
+        line-height: 1.6;
+    }
+
+    /* Badges */
+    .exam-section {
+        margin-bottom: 20px; /* Further reduced from 30px */
+    }
+
+    .badges-row {
+        display: flex;
+        flex-wrap: wrap;
+        justify-content: center;
+        gap: 10px;
+    }
+
+    .badge {
+        background: transparent;
+        border: 1px solid rgba(255, 255, 255, 0.12);
+        color: rgba(240, 236, 228, 0.55);
+        padding: 7px 18px;
+        border-radius: 50px;
+        font-size: 11px;
+        font-weight: 600;
+        letter-spacing: 0.1em;
+        font-family: monospace;
+        transition: all 0.2s;
+    }
+
+    .badge:hover {
+        border-color: rgba(234, 179, 8, 0.4);
+        color: #eab308;
+    }
+
+    /* Footer strip */
+    .final-strip {
+        border-top: 1px solid rgba(255, 255, 255, 0.07);
+        padding-top: 15px; /* Further reduced from 20px */
+        text-align: center;
+        position: relative;
+    }
+
+    .final-strip::before {
+        content: '';
+        position: absolute;
+        top: 0;
+        left: 50%;
+        transform: translateX(-50%);
+        width: 80px;
+        height: 1px;
+        background: #eab308;
+    }
+
+    .final-text {
+        font-size: 13px;
+        color: rgba(240, 236, 228, 0.4);
+        line-height: 1.7;
+        max-width: 400px;
+        margin: 0 auto;
+    }
+
+    .final-text span {
+        color: rgba(234, 179, 8, 0.8);
+    }
+</style>
+
+<div class="promo-wrap">
+    <div class="bg-grid"></div>
+    <div class="bg-glow"></div>
+    <div class="inner">
+
+        <div class="header-eyebrow">
+            <div class="eyebrow-line"></div>
+            <span class="eyebrow-text">Gujarat Exam Platform</span>
+            <div class="eyebrow-line"></div>
+        </div>
+
+        <h1 class="main-title">તમારી તૈયારીને બનાવો<br>વધુ મજબૂત!</h1>
+        <p class="main-sub">ગુજરાતની સરકારી પરીક્ષાઓ માટેનું સર્વશ્રેષ્ઠ પ્લેટફોર્મ</p>
+
+        <div class="browser-card">
+            <div class="browser-bar">
+                <div class="dot d-r"></div>
+                <div class="dot d-y"></div>
+                <div class="dot d-g"></div>
+                <div class="addr">currentadda.vercel.app</div>
+            </div>
+            <div class="browser-hero">
+                <div class="brand-badge">
+                    <div class="brand-dot"></div>
+                    <span class="brand-label">Live · Updated Daily</span>
+                </div>
+                <div class="brand-title">Current Adda</div>
+                <div class="brand-desc">દૈનિક કરંટ અફેર્સ અને ક્વિઝ</div>
+                <div class="mock-btns">
+                    <span class="mock-btn mock-btn-primary">Quiz</span>
+                    <span class="mock-btn mock-btn-ghost">PDF</span>
+                    <span class="mock-btn mock-btn-ghost">Jobs</span>
+                </div>
+            </div>
+        </div>
+
+        <div class="cta-area">
+            <a href="https://currentadda.vercel.app" class="cta-btn">વેબસાઇટની મુલાકાત લો</a><br>
+            <span class="cta-url">https://currentadda.vercel.app</span>
+        </div>
+
+        <p class="section-heading">અમારી ખાસિયતો</p>
+
+        <div class="features-grid">
+            <div class="feat-card">
+                <div class="feat-num">01</div>
+                <div class="feat-icon-wrap"><span class="feat-icon">📝</span></div>
+                <div class="feat-title">CCE સ્પેશિયલ</div>
+                <div class="feat-desc">GSSSB CCE માં 30 માર્કસનું વેઇટેજ કવર કરો.</div>
+            </div>
+            <div class="feat-card">
+                <div class="feat-num">02</div>
+                <div class="feat-icon-wrap"><span class="feat-icon">🇮🇳</span></div>
+                <div class="feat-title">IndiaBix ગુજરાતીમાં</div>
+                <div class="feat-desc">રાષ્ટ્રીય કક્ષાના શ્રેષ્ઠ પ્રશ્નો હવે ગુજરાતીમાં.</div>
+            </div>
+            <div class="feat-card">
+                <div class="feat-num">03</div>
+                <div class="feat-icon-wrap"><span class="feat-icon">⏱️</span></div>
+                <div class="feat-title">દરરોજ અપડેટ્સ</div>
+                <div class="feat-desc">દરરોજ નવા પ્રશ્નો અને વિગતવાર સમજૂતી.</div>
+            </div>
+            <div class="feat-card">
+                <div class="feat-num">04</div>
+                <div class="feat-icon-wrap"><span class="feat-icon">📥</span></div>
+                <div class="feat-title">ફ્રી મટીરીયલ</div>
+                <div class="feat-desc">મંથલી મેગેઝિન અને રિવિઝન PDF ફ્રીમાં ડાઉનલોડ કરો.</div>
+            </div>
+        </div>
+
+        <div class="exam-section">
+            <p class="section-heading">Supported Exams</p>
+            <div class="badges-row">
+                <span class="badge">GPSC</span>
+                <span class="badge">GSSSB</span>
+                <span class="badge">PSI / ASI</span>
+                <span class="badge">Constable</span>
+                <span class="badge">CCE</span>
+            </div>
+        </div>
+
+        <div class="final-strip">
+            <p class="final-text">હજારો સફળ વિદ્યાર્થીઓનો વિશ્વાસ — <span>આજે જ તમારી સફળતાની શરૂઆત કરો.</span></p>
+        </div>
+
+    </div>
+</div>

@@ -141,3 +141,8 @@ src/static/images/qr-*.png
 *.log
 current_affairs.log
 pdf_generator.log 
+
+# Persistent storage
+.translation_cache.json
+.gemini_usage.json
+whatsapp_session.json

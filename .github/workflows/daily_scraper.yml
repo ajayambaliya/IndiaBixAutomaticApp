@@ -19,44 +19,57 @@ jobs:
         with:
           python-version: '3.10'
           cache: 'pip'
-      
-      - name: Cache Playwright browsers
-        uses: actions/cache@v3
+
+      - name: Set up Node.js
+        uses: actions/setup-node@v3
         with:
-          path: ~/.cache/ms-playwright
-          key: playwright-${{ runner.os }}-${{ hashFiles('requirements.txt') }}
-          restore-keys: |
-            playwright-${{ runner.os }}-
-      
-      - name: Install dependencies
+          node-version: '18'
+          cache: 'npm'
+          cache-dependency-path: whatsapp/package.json
+
+      - name: Install Python dependencies
         run: |
           python -m pip install --upgrade pip
           pip install -r requirements.txt
-      
-      - name: Setup Playwright
+
+      - name: Install Node.js dependencies
+        working-directory: ./whatsapp
+        run: npm install
+
+      - name: Restore WhatsApp Session
+        env:
+          WWEBJS_SESSION: ${{ secrets.WWEBJS_SESSION }}
         run: |
-          python -m playwright install chromium --with-deps
-      
+          if [ -n "$WWEBJS_SESSION" ]; then
+            echo "Decoding WhatsApp session..."
+            echo "$WWEBJS_SESSION" | base64 -d > session.zip
+            unzip -o session.zip -d ./whatsapp/
+            rm session.zip
+          else
+            echo "No WWEBJS_SESSION secret found. Bot will require QR scan (will likely fail in CI)."
+          fi
+
       - name: Create .env file
         run: |
           echo "MONGO_DB_URI=${{ secrets.MONGO_DB_URI }}" > .env
           echo "TELEGRAM_BOT_TOKEN=${{ secrets.TELEGRAM_BOT_TOKEN }}" >> .env
           echo "ENGLISH_CHANNEL=${{ secrets.ENGLISH_CHANNEL }}" >> .env
           echo "GUJARATI_CHANNEL=${{ secrets.GUJARATI_CHANNEL }}" >> .env
-          echo "MISTRAL_API_KEY=${{ secrets.MISTRAL_API_KEY }}" >> .env
-      
-      - name: Get current month
+          echo "GEMINI_API_KEY=${{ secrets.GEMINI_API_KEY }}" >> .env
+          echo "WHATSAPP_GROUPS=${{ secrets.WHATSAPP_GROUPS }}" >> .env
+
+      - name: Get current date
         id: date
         run: |
           echo "DATE=$(date +'%Y-%m-%d')" >> $GITHUB_ENV
-          echo "MONTH=$(date +'%Y-%m')" >> $GITHUB_ENV
-      
-      - name: Run scraper for entire month
+
+      - name: Run Scraper and Broadcast
         env:
           MONGO_DB_URI: ${{ secrets.MONGO_DB_URI }}
           TELEGRAM_BOT_TOKEN: ${{ secrets.TELEGRAM_BOT_TOKEN }}
           ENGLISH_CHANNEL: ${{ secrets.ENGLISH_CHANNEL }}
           GUJARATI_CHANNEL: ${{ secrets.GUJARATI_CHANNEL }}
-          MISTRAL_API_KEY: ${{ secrets.MISTRAL_API_KEY }}
+          GEMINI_API_KEY: ${{ secrets.GEMINI_API_KEY }}
+          WHATSAPP_GROUPS: ${{ secrets.WHATSAPP_GROUPS }}
         run: |
-          python main.py --month ${{ env.MONTH }} --languages en gu --send-telegram --github-actions 
+          python main.py --date ${{ env.DATE }} --languages en gu --send-telegram --send-whatsapp --github-actions

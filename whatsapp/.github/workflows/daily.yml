@@ -1,0 +1,41 @@
+name: Daily WhatsApp PDF Bot
+
+on:
+  schedule:
+    # Runs at 04:00 UTC (9:30 AM IST) daily
+    - cron: '0 4 * * *'
+  workflow_dispatch: # Allows manual trigger
+
+jobs:
+  send-pdf:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v3
+
+      - name: Setup Node.js
+        uses: actions/setup-node@v3
+        with:
+          node-version: '18'
+          cache: 'npm'
+
+      - name: Install dependencies
+        run: npm install
+
+      - name: Restore WhatsApp Session
+        run: |
+          if [ -n "${{ secrets.WWEBJS_SESSION }}" ]; then
+            echo "Restoring session..."
+            echo "${{ secrets.WWEBJS_SESSION }}" | base64 -d > session.zip
+            unzip session.zip
+            rm session.zip
+          else
+            echo "Error: WWEBJS_SESSION secret is missing!"
+            exit 1
+          fi
+
+      - name: Run WhatsApp Bot
+        env:
+          WHATSAPP_GROUPS: ${{ secrets.WHATSAPP_GROUPS }}
+        run: node index.js

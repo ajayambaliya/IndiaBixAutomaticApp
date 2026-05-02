@@ -23,7 +23,7 @@ sys.path.insert(0, os.path.abspath(os.path.dirname(__file__)))
 from src.core.scraper import AsyncDataScraper
 from src.core.pdf_generator import ModernPDFGenerator
 from src.core.template_manager import TemplateManager
-from src.core.translator import translate_content, translate_with_mistral_api, is_primarily_gujarati
+from src.core.translator import translate_content, translate_with_gemini_api, is_primarily_gujarati
 from src.core.utils import (
     generate_qr_code, 
     ensure_dir_exists, 
@@ -32,6 +32,7 @@ from src.core.utils import (
     get_processed_urls
 )
 from src.core.telegram_bot import send_pdfs_to_channel, TelegramPDFBot
+from src.core.whatsapp_bot import WhatsAppBot, send_pdfs_to_whatsapp
 from src.config.settings import CONFIG
 
 # Configure logging
@@ -150,7 +151,8 @@ async def process_and_generate_pdfs(
     specific_url: Optional[str] = None,
     languages: List[str] = ["en", "gu"],
     github_actions_mode: bool = False,
-    only_generate: bool = False
+    only_generate: bool = False,
+    force_process: bool = False
 ) -> Dict[str, List[str]]:
     """Process current affairs data and generate PDFs
     
@@ -219,7 +221,7 @@ async def process_and_generate_pdfs(
                 specific_month=month,
                 date_range=date_range,
                 specific_url=specific_url,
-                force_process=False  # In GitHub Actions mode, we want to skip already processed URLs
+                force_process=force_process  # Use the provided force_process flag
             )
         else:
             questions = await scraper.fetch_all_questions(
@@ -227,7 +229,7 @@ async def process_and_generate_pdfs(
                 specific_month=month,
                 date_range=date_range,
                 specific_url=specific_url,
-                force_process=False  # Default behavior - skip already processed URLs
+                force_process=force_process  # Use the provided force_process flag
             )
         
         if not questions:
@@ -283,9 +285,9 @@ async def process_and_generate_pdfs(
                 gu_pdf_data = prepare_data_for_template(date_questions, "gu")
                 
                 # Check if translation API key is available
-                mistral_api_key = os.environ.get("MISTRAL_API_KEY")
-                if not mistral_api_key:
-                    logger.warning("MISTRAL_API_KEY not found. Skipping translation and generating Gujarati PDF with English content.")
+                gemini_api_key = os.environ.get("GEMINI_API_KEY")
+                if not gemini_api_key:
+                    logger.warning("GEMINI_API_KEY not found. Skipping translation and generating Gujarati PDF with English content.")
                     # Just set the language to Gujarati but keep English content
                     gu_pdf_data["language"] = "gu"
                 else:
@@ -296,57 +298,12 @@ async def process_and_generate_pdfs(
                             # Add a delay before starting translation to ensure API rate limits
                             await asyncio.sleep(2)
                             
-                            # First translate the title and important metadata
-                            if 'title' in gu_pdf_data and isinstance(gu_pdf_data['title'], str):
-                                gu_pdf_data['title'] = await translate_with_mistral_api(gu_pdf_data['title'], "gu")
-                            
-                            # Then translate the full content
+                            # Translate the full content in one efficient batch
                             gu_pdf_data = await translate_content(gu_pdf_data, "gu")
                             
-                            # Verify translation quality for key fields
-                            translation_verification_fields = ['title']
-                            
-                            # Also check a sample of questions for quality
-                            if 'categorized_questions' in gu_pdf_data and isinstance(gu_pdf_data['categorized_questions'], dict):
-                                for category, questions in gu_pdf_data['categorized_questions'].items():
-                                    if isinstance(questions, list) and questions:
-                                        # Check the first question in each category
-                                        if 'question_text' in questions[0]:
-                                            translation_verification_fields.append(f"question_text_in_{category}")
-                                            # Store the question text for verification
-                                            gu_pdf_data[f"question_text_in_{category}"] = questions[0]['question_text']
-                            
-                            # Verify each field and retranslate if needed
-                            for field_name in translation_verification_fields:
-                                if field_name in gu_pdf_data and isinstance(gu_pdf_data[field_name], str):
-                                    field_text = gu_pdf_data[field_name]
-                                    
-                                    # Check if the field appears to still be in English
-                                    if field_text.isascii() or not is_primarily_gujarati(field_text):
-                                        logger.warning(f"Field '{field_name}' appears to not be properly translated to Gujarati. Attempting to retranslate.")
-                                        await asyncio.sleep(3)  # Additional delay before retry
-                                        
-                                        # Try retranslation with a more forceful prompt
-                                        retranslated_text = await translate_with_mistral_api(field_text, "gu")
-                                        
-                                        # Update the field if retranslation succeeded
-                                        if retranslated_text and is_primarily_gujarati(retranslated_text):
-                                            logger.info(f"Successfully retranslated field '{field_name}'")
-                                            gu_pdf_data[field_name] = retranslated_text
-                                            
-                                            # If this is a question_text field, update it in the categorized_questions as well
-                                            if field_name.startswith("question_text_in_"):
-                                                category = field_name.replace("question_text_in_", "")
-                                                if category in gu_pdf_data['categorized_questions'] and gu_pdf_data['categorized_questions'][category]:
-                                                    gu_pdf_data['categorized_questions'][category][0]['question_text'] = retranslated_text
-                            
-                            # Clean up temporary verification fields
-                            for field_name in list(gu_pdf_data.keys()):
-                                if field_name.startswith("question_text_in_"):
-                                    del gu_pdf_data[field_name]
-                                    
                         except Exception as e:
                             logger.error(f"Error translating content to Gujarati: {e}")
+                            # Continue with partially translated or untranslated data
                             logger.warning("Continuing with English content but Gujarati language setting.")
                 
                 # Add QR code and metadata
@@ -417,6 +374,51 @@ async def send_pdfs_to_channels(pdf_files: Dict[str, List[str]], languages: List
         logger.error("Make sure TELEGRAM_BOT_TOKEN, ENGLISH_CHANNEL, and GUJARATI_CHANNEL environment variables are set correctly.")
 
 
+async def send_pdfs_to_whatsapp_groups(pdf_files: Dict[str, List[str]], target_date: str = None, languages: List[str] = ["en", "gu"]) -> None:
+    """Send PDFs to WhatsApp groups
+    
+    Args:
+        pdf_files: Dictionary mapping language codes to lists of PDF file paths
+        target_date: The date being processed (YYYY-MM-DD)
+        languages: List of language codes to send PDFs for
+    """
+    groups = CONFIG.get('whatsapp_groups', [])
+    
+    if not groups:
+        logger.error("No WhatsApp groups configured. Skipping WhatsApp upload.")
+        return
+    
+    try:
+        # Filter to ONLY send Gujarati PDF to WhatsApp
+        all_pdfs = pdf_files.get('gu', [])
+        
+        if not all_pdfs:
+            logger.warning("No Gujarati PDF file found to send to WhatsApp. Skipping.")
+            return
+            
+        logger.info(f"Sending {len(all_pdfs)} Gujarati PDFs to {len(groups)} WhatsApp groups...")
+        
+        # Format date for caption (e.g., 2026-04-30 -> 30 April 2026)
+        try:
+            date_obj = datetime.strptime(target_date, "%Y-%m-%d") if target_date else datetime.now()
+            formatted_date = date_obj.strftime("%d %B %Y")
+        except:
+            formatted_date = target_date if target_date else datetime.now().strftime("%Y-%m-%d")
+
+        # Create the requested caption
+        caption = (
+            f"*Current Affairs {formatted_date}*\n\n"
+            f"MCQ Questions With Explanations\n\n"
+            f"_Generated by Ajay Ambaliya._"
+        )
+        
+        # Send PDFs
+        await send_pdfs_to_whatsapp(groups, all_pdfs, caption)
+        
+    except Exception as e:
+        logger.error(f"Error sending PDFs to WhatsApp groups: {e}")
+
+
 def parse_arguments():
     """Parse command-line arguments"""
     parser = argparse.ArgumentParser(description='Generate Current Affairs PDFs')
@@ -440,6 +442,10 @@ def parse_arguments():
                        help='Only generate PDFs without scraping new data')
     parser.add_argument('--send-telegram', action='store_true',
                        help='Send generated PDFs to Telegram channels')
+    parser.add_argument('--send-whatsapp', action='store_true',
+                       help='Send generated PDFs to WhatsApp groups')
+    parser.add_argument('--force', action='store_true',
+                       help='Force processing of already processed URLs')
     
     return parser.parse_args()
 
@@ -461,12 +467,17 @@ async def main():
         specific_url=args.url,
         languages=args.languages,
         github_actions_mode=args.github_actions,
-        only_generate=args.only_generate
+        only_generate=args.only_generate,
+        force_process=args.force
     )
     
     # Send PDFs to Telegram channels if requested
     if args.send_telegram:
         await send_pdfs_to_channels(pdf_files, args.languages)
+        
+    # Send PDFs to WhatsApp groups if requested
+    if args.send_whatsapp:
+        await send_pdfs_to_whatsapp_groups(pdf_files, args.date, args.languages)
     
     # Print summary
     total_pdfs = sum(len(files) for files in pdf_files.values())
