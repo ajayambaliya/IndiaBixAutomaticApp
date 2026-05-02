@@ -72,4 +72,4 @@ jobs:
           GEMINI_API_KEY: ${{ secrets.GEMINI_API_KEY }}
           WHATSAPP_GROUPS: ${{ secrets.WHATSAPP_GROUPS }}
         run: |
-          python main.py --month ${{ env.MONTH }} --languages en gu --send-telegram --send-whatsapp --github-actions
+          python main.py --languages en gu --send-telegram --send-whatsapp --github-actions
