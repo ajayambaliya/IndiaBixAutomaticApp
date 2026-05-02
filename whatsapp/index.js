@@ -9,7 +9,6 @@ require('dotenv').config();
 // Dynamic arguments from command line
 const args = process.argv.slice(2);
 const PDF_PATH = args[0] ? path.resolve(args[0]) : path.join(__dirname, 'document.pdf');
-const CUSTOM_CAPTION = args[1] || 'Here is your daily PDF!';
 const GROUP_NAMES = process.env.WHATSAPP_GROUPS ? process.env.WHATSAPP_GROUPS.split(',') : [];
 
 if (!fs.existsSync(PDF_PATH)) {
@@ -107,11 +106,25 @@ async function start() {
         process.exit(1);
     });
 
+    let isBroadcasting = false;
     client.on('ready', async () => {
+        if (isBroadcasting) return;
+        isBroadcasting = true;
+
         console.log('Bot is ready! Waiting 10 seconds for stability...');
-        
-        // STABILITY DELAY: Prevent "Execution context was destroyed" errors
         await new Promise(resolve => setTimeout(resolve, 10000));
+
+        // PREMIUM DYNAMIC CAPTION
+        const dateStr = path.basename(PDF_PATH).match(/\d{4}-\d{2}-\d{2}/)?.[0] || new Date().toISOString().split('T')[0];
+        const formattedDate = new Date(dateStr).toLocaleDateString('en-GB', { day: 'numeric', month: 'long', year: 'numeric' });
+
+        const CUSTOM_CAPTION = `📅 *Daily Current Affairs • ${formattedDate}* 📝\n\n` +
+            `🚀 *What's inside?*\n` +
+            `✅ Verified MCQ Questions\n` +
+            `✅ Detailed Deep-Dive Explanations\n` +
+            `✅ Exam-Oriented Highlights\n\n` +
+            `💡 *Knowledge is Power. Stay Ahead!*\n` +
+            `✨ _Curated with ❤️ by Ajay Ambaliya_ ✨`;
 
         const media = MessageMedia.fromFilePath(PDF_PATH);
         const chats = await client.getChats();
