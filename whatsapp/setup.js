@@ -29,18 +29,21 @@ async function setup() {
     });
 
     client.on('qr', (qr) => {
+        console.log('--------------------------------------------------');
         console.log('QR RECEIVED. Scan this with your WhatsApp:');
+        console.log('--------------------------------------------------');
         const qrcode = require('qrcode-terminal');
         qrcode.generate(qr, { small: true });
     });
 
     client.on('authenticated', () => {
-        console.log('✅ AUTHENTICATED');
+        console.log('✅ AUTHENTICATED: Login successful!');
     });
 
     client.on('remote_session_saved', () => {
-        console.log('✅ REMOTE SESSION SAVED TO MONGODB');
-        console.log('You can now close this and the CI/CD will use the session from MongoDB.');
+        console.log('✅ REMOTE SESSION SAVED: Your session is now in MongoDB!');
+        console.log('Checking your database for a collection named "whatsapp-auth"...');
+        console.log('You can now close this and use CI/CD.');
         setTimeout(() => process.exit(0), 5000);
     });
 
@@ -50,7 +53,7 @@ async function setup() {
     });
 
     client.on('ready', () => {
-        console.log('✅ WhatsApp is ready!');
+        console.log('✅ WhatsApp is ready and fully loaded!');
     });
 
     console.log('Starting client initialization...');

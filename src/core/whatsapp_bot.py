@@ -41,7 +41,6 @@ class WhatsAppBot:
             
             try:
                 # Run the node script
-                # command: node index.js <pdf_path> <caption chunks...>
                 process = await asyncio.create_subprocess_exec(
                     "node", str(self.index_js), str(abs_pdf_path), caption,
                     cwd=str(self.node_script_dir),
@@ -49,37 +48,42 @@ class WhatsAppBot:
                     stderr=asyncio.subprocess.PIPE
                 )
                 
-                # Wait for the process to complete and capture output
-                stdout, stderr = await process.communicate()
-                
-                # Helper to safely decode and clean output for Windows console
-                def safe_log(data: bytes):
-                    if not data: return ""
-                    try:
-                        # Try to decode normally first
-                        return data.decode('utf-8')
-                    except UnicodeDecodeError:
-                        # Fallback to ignore errors if it's really messy
-                        return data.decode('utf-8', errors='replace')
+                # Stream stdout in real-time
+                async def stream_output(stream, is_stderr=False):
+                    while True:
+                        line = await stream.readline()
+                        if not line:
+                            break
+                        
+                        line_text = line.decode('utf-8', errors='replace').strip()
+                        if not line_text: continue
 
-                if stdout:
-                    output = safe_log(stdout)
-                    # If it looks like a QR code, print it directly to console for the user to scan
-                    if "QR RECEIVED" in output or "▄▄▄▄▄" in output:
-                        print("\n" + "="*50)
-                        print("WHATSAPP QR CODE DETECTED - PLEASE SCAN")
-                        print("="*50 + "\n")
-                        print(output)
-                        print("\n" + "="*50 + "\n")
-                    else:
-                        logger.info(f"Node.js Output:\n{output}")
-                if stderr:
-                    logger.error(f"Node.js Error:\n{safe_log(stderr)}")
-                    
+                        if is_stderr:
+                            logger.error(f"WhatsApp Bot Error: {line_text}")
+                        else:
+                            # If it looks like a QR code part, print it raw to keep formatting
+                            if any(c in line_text for c in "▄█▀"):
+                                print(line_text)
+                            elif "QR RECEIVED" in line_text:
+                                print("\n" + "="*50)
+                                print("!!! WHATSAPP QR CODE DETECTED !!!")
+                                print("="*50 + "\n")
+                                logger.info(line_text)
+                            else:
+                                logger.info(f"WhatsApp Bot: {line_text}")
+
+                # Run stdout and stderr streaming concurrently
+                await asyncio.gather(
+                    stream_output(process.stdout),
+                    stream_output(process.stderr, is_stderr=True)
+                )
+
+                await process.wait()
+                
                 if process.returncode == 0:
-                    logger.info(f"Successfully triggered WhatsApp send for {abs_pdf_path}")
+                    logger.info(f"Successfully finished WhatsApp broadcast for {abs_pdf_path}")
                 else:
-                    logger.error(f"Node.js process failed with return code {process.returncode}")
+                    logger.error(f"WhatsApp Bot process exited with code {process.returncode}")
                     
             except Exception as e:
                 logger.error(f"Exception during Node.js execution: {e}")
