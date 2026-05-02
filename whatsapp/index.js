@@ -108,7 +108,10 @@ async function start() {
     });
 
     client.on('ready', async () => {
-        console.log('Bot is ready!');
+        console.log('Bot is ready! Waiting 10 seconds for stability...');
+        
+        // STABILITY DELAY: Prevent "Execution context was destroyed" errors
+        await new Promise(resolve => setTimeout(resolve, 10000));
 
         const media = MessageMedia.fromFilePath(PDF_PATH);
         const chats = await client.getChats();
