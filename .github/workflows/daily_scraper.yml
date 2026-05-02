@@ -58,10 +58,10 @@ jobs:
           echo "GEMINI_API_KEY=${{ secrets.GEMINI_API_KEY }}" >> .env
           echo "WHATSAPP_GROUPS=${{ secrets.WHATSAPP_GROUPS }}" >> .env
 
-      - name: Get current date
+      - name: Get current month
         id: date
         run: |
-          echo "DATE=$(date +'%Y-%m-%d')" >> $GITHUB_ENV
+          echo "MONTH=$(date +'%Y-%m')" >> $GITHUB_ENV
 
       - name: Run Scraper and Broadcast
         env:
@@ -72,4 +72,4 @@ jobs:
           GEMINI_API_KEY: ${{ secrets.GEMINI_API_KEY }}
           WHATSAPP_GROUPS: ${{ secrets.WHATSAPP_GROUPS }}
         run: |
-          python main.py --date ${{ env.DATE }} --languages en gu --send-telegram --send-whatsapp --github-actions
+          python main.py --month ${{ env.MONTH }} --languages en gu --send-telegram --send-whatsapp --github-actions
