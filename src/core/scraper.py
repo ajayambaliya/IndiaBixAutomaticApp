@@ -446,40 +446,45 @@ class AsyncDataScraper:
                     today = dt.now()
                     year, month = today.year, today.month
                 
-                # Get the current date for limiting URL generation
+                # Determine the range of days to check
                 current_date = dt.now()
                 
-                # If the specified month is in the future or is the current month,
-                # limit URL generation to the current date
-                if (year > current_date.year or 
-                    (year == current_date.year and month > current_date.month)):
-                    logger.warning(f"Specified month {year}-{month:02d} is in the future. No URLs to process.")
-                    return []
-                elif (year == current_date.year and month == current_date.month):
-                    # For current month, only generate URLs up to current day
-                    last_day = current_date.day
-                else:
-                    # For past months, generate URLs for all days
+                # If we are in the first 7 days of a month, we should also check the last 7 days of the previous month
+                # This ensures we don't miss late updates from the previous month
+                days_to_check = []
+                
+                if not specific_month and not specific_date:
+                    # Daily run mode: Check current month + potential lookback
+                    lookback_days = 0
+                    if current_date.day <= 7:
+                        lookback_days = 10 # Look back 10 days to be safe (covers last week of prev month)
+                        logger.info(f"Early month detected (day {current_date.day}). Adding {lookback_days} days lookback to catch late updates.")
+                    
+                    start_check = current_date - timedelta(days=current_date.day - 1 + lookback_days)
+                    end_check = current_date
+                    
+                    temp_date = start_check
+                    while temp_date <= end_check:
+                        days_to_check.append(temp_date.strftime("%Y-%m-%d"))
+                        temp_date += timedelta(days=1)
+                elif specific_month:
+                    # Specific month mode: Check all days in that month
                     try:
-                        if month == 12:
-                            next_month = dt(year + 1, 1, 1)
-                        else:
-                            next_month = dt(year, month + 1, 1)
-                        last_day = (next_month - timedelta(days=1)).day
-                    except:
-                        # Fallback to calendar module
+                        year, month = map(int, specific_month.split('-'))
                         last_day = calendar.monthrange(year, month)[1]
+                        # If it's the current month, only go up to today
+                        if year == current_date.year and month == current_date.month:
+                            last_day = current_date.day
+                            
+                        for d in range(1, last_day + 1):
+                            days_to_check.append(f"{year}-{month:02d}-{d:02d}")
+                    except Exception as e:
+                        logger.error(f"Error generating days for month {specific_month}: {e}")
                 
-                logger.info(f"Generating URLs for {year}-{month:02d} from day 1 to day {last_day}")
+                logger.info(f"Generating URLs for {len(days_to_check)} candidate dates...")
                 
-                # Generate URLs for each day in the month
-                for day in range(1, last_day + 1):
-                    url_date = f"{year}-{month:02d}-{day:02d}"
-                    
-                    # If specific_date is provided, only process that date
-                    if specific_date and url_date != specific_date:
-                        continue
-                    
+                # Generate URLs for each day determined
+                for url_date in days_to_check:
                     # If date_range is provided, check if this date is in range
                     if date_range and not self._is_date_in_range(url_date, date_range[0], date_range[1]):
                         continue
